@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kadak Chai | Jald aa rha hai</title>
+<meta name="description" content="Kadak, a chai tapri game from tappStudio. Jald aa rha hai.">
+<link rel="canonical" href="https://kadakchai.tappstudio.in/">
+<meta name="theme-color" content="#12343B">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kadak Chai | Jald aa rha hai">
+<meta property="og:description" content="A chai tapri game from tappStudio. Jald aa rha hai.">
+<meta property="og:url" content="https://kadakchai.tappstudio.in/">
+<meta property="og:image" content="https://kadakchai.tappstudio.in/assets/icon-512.png">
+<link rel="icon" href="/assets/favicon-48.png" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@500;600&display=swap">
+<style>
+/* Pital palette, from the Kadak design system (docs/pital-specimen.html in the game repo). */
+:root {
+  --night-deep: #0B2328; --night: #12343B; --night-raised: #1A4650;
+  --teal: #1F6F6B; --tulsi: #8EC3BF; --steam: #CFE3DF;
+  --paper: #FFF8EC; --chai: #6E5843; --ink: #231A14;
+  --marigold: #F4A300; --pital: #B87400; --haldi: #FFE1AD;
+  --festive: #E0557D;
+  --f-display: "Baloo 2", "Mukta", system-ui, sans-serif;
+  --f-body: "Mukta", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --chamfer: 10px;
+  --ease-out: cubic-bezier(.22,.61,.36,1); --ease-back: cubic-bezier(.34,1.56,.64,1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--night); color: var(--paper); font-family: var(--f-body); overflow: hidden; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+
+#street { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: manipulation; cursor: pointer; }
+
+.top { position: fixed; top: 0; left: 0; right: 0; padding: calc(env(safe-area-inset-top) + 28px) 16px 0; display: grid; justify-items: center; gap: 14px; pointer-events: none; text-align: center; }
+.mark { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: clamp(52px, 11vw, 88px); line-height: .95; color: var(--marigold); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; letter-spacing: -.01em; text-shadow: 0 5px 0 var(--ink); }
+.tag { margin: 0; font-weight: 600; font-size: 15px; color: var(--paper); text-shadow: 0 1px 0 var(--ink), 0 0 10px rgba(11,35,40,.55); }
+
+.signboard { filter: drop-shadow(0 4px 0 rgba(11,35,40,.6)); min-width: 220px; }
+.signboard .outer { background: var(--ink); padding: 2px; clip-path: polygon(var(--chamfer) 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, var(--chamfer) 100%, 0 calc(100% - var(--chamfer)), 0 var(--chamfer)); }
+.signboard .inner { background: var(--night-raised); clip-path: polygon(calc(var(--chamfer) - 1px) 0, calc(100% - var(--chamfer) + 1px) 0, 100% calc(var(--chamfer) - 1px), 100% calc(100% - var(--chamfer) + 1px), calc(100% - var(--chamfer) + 1px) 100%, calc(var(--chamfer) - 1px) 100%, 0 calc(100% - var(--chamfer) + 1px), 0 calc(var(--chamfer) - 1px)); padding: 8px 22px 10px; border-top: 4px solid var(--festive); }
+.jhalar { height: 10px; margin: -1px 18px 0; background: radial-gradient(circle at 50% 0, var(--festive) 0 5px, transparent 5.5px) 0 0 / 14px 10px repeat-x; }
+.balance { font-family: var(--f-display); font-weight: 800; font-size: 38px; line-height: 42px; color: var(--marigold); font-variant-numeric: tabular-nums; white-space: nowrap; display: inline-block; }
+.balance .sym { font-size: .75em; margin-right: 2px; }
+.balance.pulse { animation: pulse 320ms var(--ease-back); }
+@keyframes pulse { 50% { transform: scale(1.08); } }
+.outlet { font-size: 12px; font-weight: 500; color: var(--tulsi); }
+
+.floater { position: fixed; left: 0; top: 0; font-family: var(--f-display); font-weight: 800; font-size: 24px; color: var(--marigold); -webkit-text-stroke: 1.5px var(--ink); paint-order: stroke fill; pointer-events: none; opacity: 0; white-space: nowrap; }
+.floater.go { animation: floatUp 900ms var(--ease-out) forwards; }
+@keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 0) scale(.8); } 15% { opacity: 1; transform: translate(-50%, -8px) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -70px) scale(1); } }
+
+.foot { position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 18px); display: flex; justify-content: center; pointer-events: none; }
+.foot a { pointer-events: auto; font-size: 13px; font-weight: 600; color: var(--paper); text-decoration: none; background: rgba(11,35,40,.78); border: 2px solid var(--ink); padding: 4px 14px; border-radius: 999px; }
+.foot a:hover { color: var(--haldi); }
+:focus-visible { outline: 3px solid var(--haldi); outline-offset: 3px; }
+
+#steam circle { animation: steam 2.4s linear infinite; transform-box: fill-box; transform-origin: center; }
+#steam circle:nth-child(2) { animation-delay: .8s; } #steam circle:nth-child(3) { animation-delay: 1.6s; }
+@keyframes steam { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 30% { opacity: .7; } 100% { opacity: 0; transform: translate(6px, -34px) scale(1.4); } }
+#kettle { transform-box: fill-box; transform-origin: 30% 90%; }
+#kettle.tilt { animation: tilt 360ms var(--ease-out); }
+@keyframes tilt { 40% { transform: rotate(-14deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  #steam circle { animation: none; opacity: .5; }
+  .floater.go { animation-duration: 600ms; }
+  .balance.pulse, #kettle.tilt { animation: none; }
+}
+</style>
+</head>
+<body>
+<svg id="street" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 200" role="img" aria-label="A chai tapri on a city street under the live sky in India. Customers walk up for chai, and a board beside the stall says Jald aa rha hai.">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop id="sky-top" offset="0" stop-color="#2F4E6E"/><stop id="sky-bot" offset="1" stop-color="#F59A5C"/></linearGradient>
+    <radialGradient id="bulbglow"><stop offset="0" stop-color="#FFE1AD" stop-opacity=".9"/><stop offset="1" stop-color="#FFE1AD" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect id="sky-rect" x="-2000" y="-2000" width="4400" height="2160" fill="url(#sky)"/>
+  <g id="stars" fill="#FFF8EC" opacity="0"></g>
+  <circle id="sun" cx="300" cy="60" r="16" fill="#FFE1AD"/>
+  <g id="bld" fill="#3A3F4F">
+    <rect x="-640" y="68" width="64" height="106"/><rect x="-570" y="94" width="60" height="80"/><rect x="-500" y="72" width="56" height="102"/><rect x="-430" y="86" width="60" height="88"/><rect x="-360" y="60" width="52" height="114"/><rect x="-300" y="90" width="64" height="84"/><rect x="-230" y="74" width="50" height="100"/><rect x="-170" y="96" width="56" height="78"/><rect x="-110" y="66" width="48" height="108"/><rect x="-60" y="84" width="52" height="90"/>
+    <rect x="0" y="70" width="46" height="100"/><rect x="40" y="92" width="38" height="80"/><rect x="278" y="62" width="50" height="110"/><rect x="322" y="88" width="40" height="84"/>
+    <rect x="360" y="74" width="48" height="100"/><rect x="404" y="96" width="52" height="78"/><rect x="452" y="64" width="46" height="110"/><rect x="494" y="88" width="60" height="86"/><rect x="550" y="70" width="50" height="104"/><rect x="596" y="92" width="58" height="82"/><rect x="650" y="62" width="52" height="112"/><rect x="700" y="84" width="60" height="90"/><rect x="756" y="74" width="50" height="100"/><rect x="804" y="96" width="64" height="78"/><rect x="864" y="66" width="56" height="108"/><rect x="916" y="90" width="60" height="84"/><rect x="970" y="70" width="60" height="104"/>
+  </g>
+  <g id="windows" fill="#FFE1AD" opacity="0">
+    <rect x="-626" y="82" width="8" height="10"/><rect x="-552" y="108" width="8" height="10"/><rect x="-486" y="86" width="8" height="10"/><rect x="-466" y="110" width="8" height="10"/><rect x="-412" y="100" width="8" height="10"/><rect x="-346" y="76" width="8" height="10"/><rect x="-326" y="98" width="8" height="10"/><rect x="-282" y="104" width="8" height="10"/><rect x="-216" y="88" width="8" height="10"/><rect x="-150" y="110" width="8" height="10"/><rect x="-96" y="80" width="8" height="10"/><rect x="-80" y="104" width="8" height="10"/><rect x="-44" y="98" width="8" height="10"/>
+    <rect x="10" y="84" width="8" height="10"/><rect x="26" y="104" width="8" height="10"/><rect x="290" y="78" width="8" height="10"/><rect x="306" y="100" width="8" height="10"/><rect x="334" y="104" width="8" height="10"/>
+    <rect x="374" y="88" width="8" height="10"/><rect x="420" y="110" width="8" height="10"/><rect x="466" y="78" width="8" height="10"/><rect x="480" y="102" width="8" height="10"/><rect x="512" y="104" width="8" height="10"/><rect x="566" y="84" width="8" height="10"/><rect x="614" y="106" width="8" height="10"/><rect x="664" y="76" width="8" height="10"/><rect x="680" y="100" width="8" height="10"/><rect x="718" y="98" width="8" height="10"/><rect x="772" y="88" width="8" height="10"/><rect x="822" y="110" width="8" height="10"/><rect x="880" y="80" width="8" height="10"/><rect x="934" y="104" width="8" height="10"/><rect x="988" y="84" width="8" height="10"/>
+  </g>
+  <rect id="ground" x="-2000" y="160" width="4400" height="2000" fill="#6E5843"/>
+  <rect x="-2000" y="158" width="4400" height="4" fill="#231A14" opacity=".35"/>
+
+  <!-- tapri -->
+  <polygon points="92,58 268,58 280,78 80,78" fill="#1F6F6B" stroke="#231A14" stroke-width="2"/>
+  <path d="M80 78 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0" fill="#1F6F6B" stroke="#231A14" stroke-width="2"/>
+  <rect x="98" y="78" width="4" height="34" fill="#231A14"/><rect x="258" y="78" width="4" height="34" fill="#231A14"/>
+  <circle id="bulb-glow" cx="180" cy="92" r="46" fill="url(#bulbglow)" opacity="0"/>
+  <line x1="180" y1="78" x2="180" y2="88" stroke="#231A14" stroke-width="1.5"/>
+  <circle id="bulb" cx="180" cy="91" r="4" fill="#A8916F" stroke="#231A14" stroke-width="1.5"/>
+  <rect x="92" y="112" width="176" height="48" rx="3" fill="#B5562F" stroke="#231A14" stroke-width="2"/>
+  <rect x="92" y="108" width="176" height="8" fill="#8A5A00" stroke="#231A14" stroke-width="2"/>
+  <g fill="#B5562F" stroke="#231A14" stroke-width="1.5"><polygon points="106,96 116,96 114,108 108,108"/><polygon points="120,96 130,96 128,108 122,108"/><polygon points="134,96 144,96 142,108 136,108"/></g>
+  <rect x="196" y="98" width="40" height="10" rx="2" fill="#8EC3BF" stroke="#231A14" stroke-width="1.5"/>
+  <g id="kettle">
+    <path d="M232 80 L248 68" stroke="#231A14" stroke-width="5" stroke-linecap="round"/><path d="M232 80 L248 68" stroke="#B87400" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="216" cy="86" rx="18" ry="12" fill="#F4A300" stroke="#231A14" stroke-width="2"/>
+    <path d="M204 76 q12 -16 24 0" fill="none" stroke="#231A14" stroke-width="2.5"/>
+    <ellipse cx="216" cy="75" rx="6" ry="2.5" fill="#B87400" stroke="#231A14" stroke-width="1.5"/>
+  </g>
+  <g id="steam" fill="#FFF8EC"><circle cx="248" cy="62" r="5"/><circle cx="244" cy="62" r="4"/><circle cx="250" cy="64" r="4.5"/></g>
+
+  <!-- customers walk in here -->
+  <g id="customers" stroke="#231A14" stroke-width="2"></g>
+
+  <!-- the board beside the tapri -->
+  <g id="board" transform="translate(12 0)">
+    <ellipse cx="339" cy="167" rx="40" ry="3" fill="#231A14" opacity=".3"/>
+    <path d="M308 167 L316 104 M370 167 L362 104" stroke="#231A14" stroke-width="4" stroke-linecap="round"/>
+    <path d="M308 167 L316 104 M370 167 L362 104" stroke="#6E5843" stroke-width="2" stroke-linecap="round"/>
+    <rect x="299" y="98" width="80" height="54" rx="3" fill="#6E5843" stroke="#231A14" stroke-width="2"/>
+    <rect x="304" y="103" width="70" height="44" rx="1.5" fill="#12343B" stroke="#231A14" stroke-width="1.5"/>
+    <g font-family="'Baloo 2', Mukta, system-ui, sans-serif" font-weight="800" font-size="15" text-anchor="middle" fill="#F4A300" stroke="#231A14" stroke-width="2.5" paint-order="stroke fill">
+      <text x="339" y="122">Jald aa</text>
+      <text x="339" y="139">rha hai</text>
+    </g>
+    <circle cx="303" cy="101" r="3.5" fill="#F4A300" stroke="#231A14" stroke-width="1.2"/>
+    <circle cx="375" cy="101" r="3.5" fill="#F4A300" stroke="#231A14" stroke-width="1.2"/>
+  </g>
+
+  <rect id="shade" x="-2000" y="-2000" width="4400" height="4400" fill="#0B2328" opacity="0" pointer-events="none"/>
+</svg>
+
+<header class="top">
+  <h1 class="mark">Kadak</h1>
+  <p class="tag">Ek tapri. Ek kettle. Poora sheher.</p>
+  <div class="signboard" aria-hidden="true">
+    <div class="outer"><div class="inner">
+      <div class="balance" id="balance"><span class="sym">₹</span><span id="n">0</span></div>
+      <div class="outlet" id="phase">Tapri no. 1</div>
+    </div></div>
+    <div class="jhalar"></div>
+  </div>
+</header>
+
+<footer class="foot"><a href="https://tappstudio.in">A tappStudio game</a></footer>
+
+<script>
+(function () {
+  const $ = s => document.querySelector(s);
+  const svg = $('#street'), NS = 'http://www.w3.org/2000/svg';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Fit: keep the tapri, its customers and the board (x 10..392) in view ---------- */
+  const CORE_W = 392, CORE_C = 200;
+  let vb = { x: 0, y: 0, w: 390, h: 200 }, scale = 1;
+  function fit() {
+    const W = innerWidth, H = innerHeight;
+    // Tall phones get the street higher up, so the sky isn't one big empty band.
+    const ground = H * (H > W * 1.3 ? 0.7 : 0.82);
+    // As wide as the screen allows, but leave room above the canopy for the header.
+    scale = Math.max(0.6, Math.min(W / CORE_W, (ground - 230) / 110, 3));
+    vb.w = W / scale; vb.h = H / scale;
+    vb.x = CORE_C - vb.w / 2;
+    vb.y = 160 - ground / scale;
+    svg.setAttribute('viewBox', `${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}`);
+    $('#sky-rect').setAttribute('y', vb.y.toFixed(2));
+    $('#sky-rect').setAttribute('height', (160 - vb.y).toFixed(2));
+    placeStars();
+    setSky(hourNow());
+  }
+  const toScreen = (x, y) => [(x - vb.x) * scale, (y - vb.y) * scale];
+
+  /* ---------- Stars (seeded, so they don't jump on resize) ---------- */
+  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  const STAR = (() => { const r = rng(7), a = []; for (let i = 0; i < 140; i++) a.push([r(), r(), 0.5 + r() * 0.9]); return a; })();
+  function placeStars() {
+    const g = $('#stars'); g.textContent = '';
+    const top = vb.y, bottom = 62;
+    STAR.forEach(([u, v, r]) => {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', (vb.x + u * vb.w).toFixed(1));
+      c.setAttribute('cy', (top + v * (bottom - top)).toFixed(1));
+      c.setAttribute('r', (r / Math.max(scale, 1) * 1.4).toFixed(2));
+      c.setAttribute('opacity', (0.35 + (1 - v) * 0.6).toFixed(2));
+      g.appendChild(c);
+    });
+  }
+
+  /* ---------- Live sky, by the time in India ---------- */
+  const KF = [ // hour, skyTop, skyBottom, ground, buildings, night(0..1)
+    [0, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1], [5, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1],
+    [7, '#8FB6C8', '#E9E4D6', '#8A8172', '#6E8C96', .15], [10.5, '#5FA9C9', '#CFE7EE', '#A99A80', '#7C97A0', 0],
+    [15.5, '#5FA9C9', '#CFE7EE', '#A99A80', '#7C97A0', 0], [18, '#2F4E6E', '#F59A5C', '#6E5843', '#3A3F4F', .55],
+    [20, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1], [24, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1],
+  ];
+  const hex2 = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, t) => '#' + hex2(a).map((v, i) => Math.round(v + (hex2(b)[i] - v) * t).toString(16).padStart(2, '0')).join('');
+  const forced = parseFloat(new URLSearchParams(location.search).get('h'));
+  function hourNow() {
+    if (forced >= 0 && forced < 24) return forced;
+    const ist = new Date(Date.now() + 5.5 * 3600e3);
+    return ist.getUTCHours() + ist.getUTCMinutes() / 60;
+  }
+  function phaseOf(h) { return h >= 5 && h < 10 ? 'Subah ki chai' : h >= 10 && h < 16 ? 'Dopahar ki chai' : h >= 16 && h < 19.5 ? 'Shaam ki chai' : 'Raat ki chai'; }
+  function setSky(h) {
+    let i = 0; while (i < KF.length - 2 && h > KF[i + 1][0]) i++;
+    const a = KF[i], b = KF[i + 1], t = (h - a[0]) / (b[0] - a[0] || 1);
+    const top = mix(a[1], b[1], t);
+    $('#sky-top').setAttribute('stop-color', top);
+    $('#sky-bot').setAttribute('stop-color', mix(a[2], b[2], t));
+    $('#ground').setAttribute('fill', mix(a[3], b[3], t));
+    $('#bld').setAttribute('fill', mix(a[4], b[4], t));
+    document.querySelector('meta[name=theme-color]').setAttribute('content', top);
+    document.body.style.background = top;
+    const night = a[5] + (b[5] - a[5]) * t;
+    $('#shade').setAttribute('opacity', (night * .28).toFixed(2));
+    $('#bulb-glow').setAttribute('opacity', night.toFixed(2));
+    $('#bulb').setAttribute('fill', night > .4 ? '#FFE1AD' : '#A8916F');
+    $('#windows').setAttribute('opacity', (night * .9).toFixed(2));
+    $('#stars').setAttribute('opacity', Math.max(0, (night - .5) * 2).toFixed(2));
+    // The sun arcs across what's on screen; at night a small moon sits up and to the right.
+    const sunUp = h > 5.5 && h < 19.5, p = (h - 5.5) / 14, sun = $('#sun');
+    const left = vb.x + vb.w * .08, span = vb.w * .84, peak = Math.max(vb.y + 40 / scale + 24, -70);
+    sun.setAttribute('cx', (sunUp ? left + p * span : vb.x + vb.w * .8).toFixed(0));
+    sun.setAttribute('cy', (sunUp ? 150 - Math.sin(p * Math.PI) * (150 - peak) : Math.max(vb.y + 30, 20)).toFixed(0));
+    sun.setAttribute('fill', sunUp ? (h > 16 || h < 7.5 ? '#F59A5C' : '#FFF8EC') : '#CFE3DF');
+    sun.setAttribute('r', sunUp ? 16 : 10);
+    $('#phase').textContent = 'Tapri no. 1 · ' + phaseOf(h);
+  }
+
+  /* ---------- Festive trim for the month (the Utsav pack colours) ---------- */
+  const TRIM = ['#E8508A', '#E79AB0', '#D9479A', '#7FB77E', '#FFB43A', '#D7E05A', '#6FA8DC', '#9DB548', '#F2C14E', '#E0557D', '#FFC94D', '#FFE9A8'];
+  document.documentElement.style.setProperty('--festive', TRIM[new Date(Date.now() + 5.5 * 3600e3).getUTCMonth()]);
+
+  /* ---------- Galla: the signboard balance ---------- */
+  let balance = 0;
+  const nEl = $('#n'), balEl = $('#balance');
+  function earn(v) {
+    balance += v;
+    nEl.textContent = balance.toLocaleString('en-IN');
+    balEl.classList.remove('pulse'); void balEl.offsetWidth; balEl.classList.add('pulse');
+  }
+
+  /* ---------- Floating "+₹" numbers ---------- */
+  const pool = []; let pi = 0;
+  for (let i = 0; i < 12; i++) { const f = document.createElement('span'); f.className = 'floater'; f.setAttribute('aria-hidden', 'true'); document.body.appendChild(f); pool.push(f); }
+  function float(px, py, v) {
+    const f = pool[pi++ % pool.length];
+    f.textContent = '+₹' + v;
+    f.style.left = px + 'px'; f.style.top = (py - 20) + 'px';
+    f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+  }
+
+  /* ---------- Customers: walk up, wait, get their chai, pay, walk off ---------- */
+  const SPOTS = [30, 58, 284], WAIT = 1400, SERVE = 800, FADE = 240, SPEED = 70;
+  const BODIES = ['#C8352B', '#5E9C3A', '#F4A300', '#8EC3BF', '#E8742A', '#F5D9C8'];
+  const HEADS = ['#B5562F', '#8A5A00', '#6E5843', '#B5521A'];
+  const PRICES = [10, 10, 12, 15, 15, 20]; // cutting, kadak, masala, elaichi...
+  const crowd = [], layer = $('#customers');
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  function arrive(now) {
+    const free = SPOTS.filter(s => !crowd.some(c => c.spot === s));
+    if (!free.length) return;
+    const spot = pick(free), h = 0.8 + Math.random() * 0.4;
+    const from = spot < CORE_C ? vb.x - 20 : vb.x + vb.w + 20;
+    const walk = reduce ? 0 : Math.abs(spot - from) / SPEED * 1000;
+    const bh = 42 * h, g = document.createElementNS(NS, 'g');
+    g.innerHTML = `<rect x="-9" y="${(166 - bh).toFixed(1)}" width="18" height="${bh.toFixed(1)}" rx="9" fill="${pick(BODIES)}"/><circle cx="0" cy="${(158 - bh).toFixed(1)}" r="8" fill="${pick(HEADS)}"/>`;
+    layer.appendChild(g);
+    crowd.push({ g, spot, from, walk, bh, born: now, served: false });
+    wake();
+  }
+  function step(now) {
+    for (let i = crowd.length - 1; i >= 0; i--) {
+      const c = crowd[i], t = now - c.born, arrives = c.walk, leaves = arrives + WAIT, gone = leaves + c.walk;
+      let x = c.spot, bob = 0, op = 1;
+      if (t < arrives) { const k = t / c.walk; x = c.from + (c.spot - c.from) * k; bob = Math.abs(Math.sin(t / 110)) * 2; }
+      else if (t > leaves) { const k = (t - leaves) / (c.walk || 1); x = c.spot + (c.from - c.spot) * k; bob = Math.abs(Math.sin(t / 110)) * 2; }
+      if (reduce) op = Math.min(1, t / FADE, Math.max(0, (leaves + FADE - t) / FADE));
+      if (!c.served && t >= arrives + SERVE) {
+        c.served = true;
+        const v = pick(PRICES), [px, py] = toScreen(c.spot, 158 - c.bh - 10);
+        float(px, py, v); earn(v); steam();
+      }
+      if (t >= (reduce ? leaves + FADE : gone)) { c.g.remove(); crowd.splice(i, 1); continue; }
+      c.g.setAttribute('transform', `translate(${x.toFixed(1)} ${(-bob).toFixed(1)})`);
+      c.g.setAttribute('opacity', op.toFixed(2));
+    }
+  }
+  let raf = 0;
+  function loop(now) { step(now); raf = crowd.length ? requestAnimationFrame(loop) : 0; }
+  function wake() { if (!raf) raf = requestAnimationFrame(loop); }
+
+  let timer;
+  function schedule(first) {
+    const wait = first ? 1200 + Math.random() * 1300 : 2200 + Math.random() * 4300;
+    timer = setTimeout(() => { if (!document.hidden) arrive(performance.now()); schedule(false); }, wait);
+  }
+  schedule(true);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) setSky(hourNow()); });
+
+  /* ---------- Tap to pour ---------- */
+  const kettle = $('#kettle');
+  function steam() { kettle.classList.remove('tilt'); void kettle.getBBox(); kettle.classList.add('tilt'); }
+  svg.addEventListener('pointerdown', e => { float(e.clientX, e.clientY, 1); earn(1); steam(); });
+
+  addEventListener('resize', fit);
+  fit();
+  setInterval(() => setSky(hourNow()), 60e3);
+})();
+</script>
+</body>
+</html>
