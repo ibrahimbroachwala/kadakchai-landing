@@ -25,7 +25,6 @@
   --teal: #1F6F6B; --tulsi: #8EC3BF; --steam: #CFE3DF;
   --paper: #FFF8EC; --chai: #6E5843; --ink: #231A14;
   --marigold: #F4A300; --pital: #B87400; --haldi: #FFE1AD;
-  --festive: #E0557D;
   --f-display: "Baloo 2", "Mukta", system-ui, sans-serif;
   --f-body: "Mukta", system-ui, -apple-system, "Segoe UI", sans-serif;
   --chamfer: 10px;
@@ -41,20 +40,12 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
 .mark { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: clamp(52px, 11vw, 88px); line-height: .95; color: var(--marigold); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; letter-spacing: -.01em; text-shadow: 0 5px 0 var(--ink); }
 .tag { margin: 0; font-weight: 600; font-size: 15px; color: var(--paper); text-shadow: 0 1px 0 var(--ink), 0 0 10px rgba(11,35,40,.55); }
 
-.signboard { filter: drop-shadow(0 4px 0 rgba(11,35,40,.6)); min-width: 220px; }
-.signboard .outer { background: var(--ink); padding: 2px; clip-path: polygon(var(--chamfer) 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, var(--chamfer) 100%, 0 calc(100% - var(--chamfer)), 0 var(--chamfer)); }
-.signboard .inner { background: var(--night-raised); clip-path: polygon(calc(var(--chamfer) - 1px) 0, calc(100% - var(--chamfer) + 1px) 0, 100% calc(var(--chamfer) - 1px), 100% calc(100% - var(--chamfer) + 1px), calc(100% - var(--chamfer) + 1px) 100%, calc(var(--chamfer) - 1px) 100%, 0 calc(100% - var(--chamfer) + 1px), 0 calc(var(--chamfer) - 1px)); padding: 8px 22px 10px; border-top: 4px solid var(--festive); }
-.jhalar { height: 10px; margin: -1px 18px 0; background: radial-gradient(circle at 50% 0, var(--festive) 0 5px, transparent 5.5px) 0 0 / 14px 10px repeat-x; }
-.balance { font-family: var(--f-display); font-weight: 800; font-size: 38px; line-height: 42px; color: var(--marigold); font-variant-numeric: tabular-nums; white-space: nowrap; display: inline-block; }
-.balance .sym { font-size: .75em; margin-right: 2px; }
-.balance.pulse { animation: pulse 320ms var(--ease-back); }
-@keyframes pulse { 50% { transform: scale(1.08); } }
-.outlet { font-size: 12px; font-weight: 500; color: var(--tulsi); }
 
 .floater { position: fixed; left: 0; top: 0; font-family: var(--f-display); font-weight: 800; font-size: 24px; color: var(--marigold); -webkit-text-stroke: 1.5px var(--ink); paint-order: stroke fill; pointer-events: none; opacity: 0; white-space: nowrap; }
 .floater.go { animation: floatUp 900ms var(--ease-out) forwards; }
 @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 0) scale(.8); } 15% { opacity: 1; transform: translate(-50%, -8px) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -70px) scale(1); } }
 
+.coin { display: inline-block; width: 1em; height: 1em; vertical-align: -0.12em; margin-right: .08em; }
 .foot { position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 18px); display: flex; justify-content: center; pointer-events: none; }
 .foot a { pointer-events: auto; font-size: 13px; font-weight: 600; color: var(--paper); text-decoration: none; background: rgba(11,35,40,.78); border: 2px solid var(--ink); padding: 4px 14px; border-radius: 999px; }
 .foot a:hover { color: var(--haldi); }
@@ -70,11 +61,14 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
 @media (prefers-reduced-motion: reduce) {
   #steam circle { animation: none; opacity: .5; }
   .floater.go { animation-duration: 600ms; }
-  .balance.pulse, #kettle.tilt { animation: none; }
+  #kettle.tilt { animation: none; }
 }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#F4A300" stroke="#231A14" stroke-width="2"/><circle cx="12" cy="12" r="6.2" fill="none" stroke="#B87400" stroke-width="1.6"/><path d="M12 8.6v6.8M10 10.4h3.2a1.2 1.2 0 0 1 0 2.4H10.6a1.2 1.2 0 0 0 0 2.4H14" fill="none" stroke="#8A5A00" stroke-width="1.3" stroke-linecap="round"/></symbol>
+</defs></svg>
 <svg id="street" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 200" role="img" aria-label="A chai tapri on a city street under the live sky in India. Customers walk up for chai, and a board beside the stall says Jald aa rha hai.">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop id="sky-top" offset="0" stop-color="#2F4E6E"/><stop id="sky-bot" offset="1" stop-color="#F59A5C"/></linearGradient>
@@ -139,13 +133,6 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
 <header class="top">
   <h1 class="mark">Kadak</h1>
   <p class="tag">Ek tapri. Ek kettle. Poora sheher.</p>
-  <div class="signboard" aria-hidden="true">
-    <div class="outer"><div class="inner">
-      <div class="balance" id="balance"><span class="sym">₹</span><span id="n">0</span></div>
-      <div class="outlet" id="phase">Tapri no. 1</div>
-    </div></div>
-    <div class="jhalar"></div>
-  </div>
 </header>
 
 <footer class="foot"><a href="https://tappstudio.in">A tappStudio game</a></footer>
@@ -207,7 +194,6 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
     const ist = new Date(Date.now() + 5.5 * 3600e3);
     return ist.getUTCHours() + ist.getUTCMinutes() / 60;
   }
-  function phaseOf(h) { return h >= 5 && h < 10 ? 'Subah ki chai' : h >= 10 && h < 16 ? 'Dopahar ki chai' : h >= 16 && h < 19.5 ? 'Shaam ki chai' : 'Raat ki chai'; }
   function setSky(h) {
     let i = 0; while (i < KF.length - 2 && h > KF[i + 1][0]) i++;
     const a = KF[i], b = KF[i + 1], t = (h - a[0]) / (b[0] - a[0] || 1);
@@ -231,28 +217,14 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
     sun.setAttribute('cy', (sunUp ? 150 - Math.sin(p * Math.PI) * (150 - peak) : Math.max(vb.y + 30, 20)).toFixed(0));
     sun.setAttribute('fill', sunUp ? (h > 16 || h < 7.5 ? '#F59A5C' : '#FFF8EC') : '#CFE3DF');
     sun.setAttribute('r', sunUp ? 16 : 10);
-    $('#phase').textContent = 'Tapri no. 1 · ' + phaseOf(h);
   }
 
-  /* ---------- Festive trim for the month (the Utsav pack colours) ---------- */
-  const TRIM = ['#E8508A', '#E79AB0', '#D9479A', '#7FB77E', '#FFB43A', '#D7E05A', '#6FA8DC', '#9DB548', '#F2C14E', '#E0557D', '#FFC94D', '#FFE9A8'];
-  document.documentElement.style.setProperty('--festive', TRIM[new Date(Date.now() + 5.5 * 3600e3).getUTCMonth()]);
-
-  /* ---------- Galla: the signboard balance ---------- */
-  let balance = 0;
-  const nEl = $('#n'), balEl = $('#balance');
-  function earn(v) {
-    balance += v;
-    nEl.textContent = balance.toLocaleString('en-IN');
-    balEl.classList.remove('pulse'); void balEl.offsetWidth; balEl.classList.add('pulse');
-  }
-
-  /* ---------- Floating "+₹" numbers ---------- */
+  /* ---------- Floating coin numbers, one per pour ---------- */
   const pool = []; let pi = 0;
   for (let i = 0; i < 12; i++) { const f = document.createElement('span'); f.className = 'floater'; f.setAttribute('aria-hidden', 'true'); document.body.appendChild(f); pool.push(f); }
   function float(px, py, v) {
     const f = pool[pi++ % pool.length];
-    f.textContent = '+₹' + v;
+    f.innerHTML = '+<svg class="coin" aria-hidden="true"><use href="#coin"/></svg>' + v;
     f.style.left = px + 'px'; f.style.top = (py - 20) + 'px';
     f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
   }
@@ -286,7 +258,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
       if (!c.served && t >= arrives + SERVE) {
         c.served = true;
         const v = pick(PRICES), [px, py] = toScreen(c.spot, 158 - c.bh - 10);
-        float(px, py, v); earn(v); steam();
+        float(px, py, v); steam();
       }
       if (t >= (reduce ? leaves + FADE : gone)) { c.g.remove(); crowd.splice(i, 1); continue; }
       c.g.setAttribute('transform', `translate(${x.toFixed(1)} ${(-bob).toFixed(1)})`);
@@ -308,7 +280,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   /* ---------- Tap to pour ---------- */
   const kettle = $('#kettle');
   function steam() { kettle.classList.remove('tilt'); void kettle.getBBox(); kettle.classList.add('tilt'); }
-  svg.addEventListener('pointerdown', e => { float(e.clientX, e.clientY, 1); earn(1); steam(); });
+  svg.addEventListener('pointerdown', e => { float(e.clientX, e.clientY, 1); steam(); });
 
   addEventListener('resize', fit);
   fit();
