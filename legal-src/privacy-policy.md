@@ -1,6 +1,6 @@
 # Privacy Policy for Kadak: Idle Chai Empire
 
-**Last updated:** October 13, 2026
+**Last updated:** October 19, 2026
 
 TappStudio ("TappStudio," "we," "us," or "our") makes **Kadak: Idle Chai Empire** (the "Game"), a free idle game for Android and iOS in which you grow a roadside chai stall into a chain of outlets. This Privacy Policy explains what information the Game collects, why, who receives it, and the choices you have.
 
@@ -38,7 +38,9 @@ We use PostHog to understand how the Game is played, to find and fix crashes, an
 - Approximate region and IP address, which PostHog receives as part of any internet request. We do not use these to identify you.
 - The group of an experiment you were placed in, when we test two versions of a feature
 
-We do not use your advertising ID, and we do not collect your contacts, photos, microphone, camera, precise location, or messages.
+PostHog may record a replay of the game's screens during a session to find bugs; the game's screens contain no personal information.
+
+We do not collect your contacts, photos, microphone, camera, precise location, or messages.
 
 You can turn analytics off in **Settings** inside the Game. Crash and error reporting that is necessary to keep the Game running may be limited when you do so.
 
@@ -48,7 +50,7 @@ If you buy something, the transaction is processed by Apple or Google. Our subsc
 
 ### 2.4 Advertising (Google AdMob)
 
-The Game offers **optional rewarded videos**, shown only when you tap to watch one. These are served by **Google AdMob**. To show an ad and to prevent fraud, Google may collect device and ad-related information such as your IP address, device identifiers, and ad interaction data, according to Google's own policies. Where the law requires it (for example in the EEA, UK and some other places) we show a consent prompt before ads are requested, and you can change your choice later. We do not run banner or full-screen interstitial ads.
+The Game offers **optional rewarded videos**, shown only when you tap to watch one. These are served by **Google AdMob**. To show an ad and to prevent fraud, Google may collect device and ad-related information such as your IP address, device identifiers, and ad interaction data, according to Google's own policies. Where the law requires it (for example in the EEA, UK and some other places) we show a consent prompt before ads are requested, and you can change your choice later. On Android, Google AdMob may use your device's advertising ID, which you can reset or delete in Android settings. On iOS the Game does not use the advertising identifier (IDFA). We do not run banner or full-screen interstitial ads.
 
 ### 2.5 Leaderboards, achievements and cloud save (Google Play Games, Apple Game Center)
 
