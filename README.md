@@ -1,12 +1,12 @@
 # kadakchai.tappstudio.in
 
-Teaser site and store-required pages for **Kadak: Idle Chai Empire** (tappStudio). Plain static HTML on GitHub Pages: no build step, no framework. Work happens on `release`, and Pages publishes `release` from the repo root.
+Landing site and store-required pages for **Kadak: Idle Chai Empire** (tappStudio). Plain static HTML on GitHub Pages: no build step, no framework. Work happens on `release`, and Pages publishes `release` from the repo root.
 
 | URL | File | Notes |
 |---|---|---|
-| `/` | `index.html` | Teaser: the tapri under the live sky (IST), customers walking up and paying, the "Jald aa rha hai" board |
-| `/privacy-policy/` | `privacy-policy/index.html` | `noindex`, not linked from the teaser |
-| `/terms/` | `terms/index.html` | `noindex`, not linked from the teaser |
+| `/` | `index.html` | Landing: the tapri under the live sky (IST), customers walking up and paying, Google Play and App Store buttons, footer with legal links |
+| `/privacy-policy/` | `privacy-policy/index.html` | `noindex`, linked from the landing footer |
+| `/terms/` | `terms/index.html` | `noindex`, linked from the landing footer |
 | `/support/` | `support/index.html` | `noindex`, also the data-deletion page (`/support/#3-data-deletion`) |
 
 The old `tappstudio.in/kadak/*.html` URLs redirect here.
@@ -17,7 +17,7 @@ The old `tappstudio.in/kadak/*.html` URLs redirect here.
 python3 -m http.server 8124
 ```
 
-Add `?h=21` (any hour 0–24) to the teaser URL to see the sky at that time of day in India.
+Add `?h=21` (any hour 0–24) to the landing URL to see the sky at that time of day in India.
 
 ## Editing the legal pages
 
