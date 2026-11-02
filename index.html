@@ -57,25 +57,42 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
 @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 0) scale(.8); } 15% { opacity: 1; transform: translate(-50%, -8px) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -70px) scale(1); } }
 
 .coin { display: inline-block; width: 1em; height: 1em; vertical-align: -0.12em; margin-right: .08em; }
-.foot { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom) + 14px); width: max-content; max-width: calc(100% - 32px); padding: 6px 16px 7px; text-align: center; background: rgba(11,35,40,.82); border: 2px solid var(--ink); border-radius: 16px; font-size: 13px; font-weight: 600; }
+.bottom { position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 14px); padding: 0 16px; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 10px; pointer-events: none; }
+.bottom > * { pointer-events: auto; }
+.foot { width: max-content; max-width: 100%; padding: 6px 16px 7px; text-align: center; background: rgba(11,35,40,.82); border: 2px solid var(--ink); border-radius: 16px; font-size: 13px; font-weight: 600; }
 .foot nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; }
 .foot p { margin: 3px 0 0; font-size: 11px; color: var(--steam); }
 .foot a { color: var(--paper); text-decoration: none; }
 .foot p a { color: inherit; }
 .foot a:hover { color: var(--haldi); text-decoration: underline; }
+.controls { display: flex; align-items: center; gap: 10px; width: min(100%, 440px); padding: 5px 12px 5px 5px; background: rgba(11,35,40,.82); border: 2px solid var(--ink); border-radius: 999px; }
+.icon-btn { flex: none; display: grid; place-items: center; width: 38px; height: 38px; padding: 0; color: var(--ink); background: var(--marigold); border: 2px solid var(--ink); border-radius: 50%; box-shadow: 0 3px 0 var(--ink); cursor: pointer; transition: transform 120ms var(--ease-out), box-shadow 120ms var(--ease-out); }
+.icon-btn:hover { background: var(--haldi); }
+.icon-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+.icon-btn svg { width: 20px; height: 20px; }
+.icon-btn[aria-pressed="false"] { background: var(--steam); }
+.clock { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+.clock output { flex: none; min-width: 62px; font-family: var(--f-display); font-weight: 700; font-size: 15px; line-height: 1; text-align: right; white-space: nowrap; }
+.live { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 2px; font: 700 12px/1.2 var(--f-display); letter-spacing: .04em; text-transform: uppercase; color: var(--steam); background: none; border: 1.5px solid var(--steam); border-radius: 999px; cursor: pointer; }
+.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.live[aria-pressed="true"] { color: var(--ink); background: var(--tulsi); border-color: var(--ink); cursor: default; }
+.live[aria-pressed="false"]:hover { color: var(--haldi); border-color: var(--haldi); }
+#hour { flex: 1; min-width: 0; height: 22px; margin: 0; background: none; -webkit-appearance: none; appearance: none; cursor: pointer; }
+#hour::-webkit-slider-runnable-track { height: 10px; border: 2px solid var(--ink); border-radius: 999px; background: var(--day); }
+#hour::-moz-range-track { height: 6px; border: 2px solid var(--ink); border-radius: 999px; background: var(--day); }
+#hour::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7px; border: 2px solid var(--ink); border-radius: 50%; background: var(--marigold); box-shadow: 0 2px 0 var(--ink); }
+#hour::-moz-range-thumb { width: 16px; height: 16px; border: 2px solid var(--ink); border-radius: 50%; background: var(--marigold); box-shadow: 0 2px 0 var(--ink); }
+@media (max-width: 400px) { .controls { gap: 7px; padding-right: 8px; } .clock { gap: 7px; } .clock output { min-width: 54px; font-size: 13px; } .live { padding: 3px 7px 2px; font-size: 11px; } }
 :focus-visible { outline: 3px solid var(--haldi); outline-offset: 3px; }
 
-#steam circle { animation: steam 2.4s linear infinite; transform-box: fill-box; transform-origin: center; }
-#steam circle:nth-child(2) { animation-delay: .8s; } #steam circle:nth-child(3) { animation-delay: 1.6s; }
-@keyframes steam { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 30% { opacity: .7; } 100% { opacity: 0; transform: translate(6px, -34px) scale(1.4); } }
-#kettle { transform-box: fill-box; transform-origin: 30% 90%; }
-#kettle.tilt { animation: tilt 360ms var(--ease-out); }
-@keyframes tilt { 40% { transform: rotate(-14deg); } }
-
+.waft { animation: waft 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+.waft.b { animation-delay: -1.6s; }
+@keyframes waft { 0%, 100% { transform: translate(0, 0) scaleY(1); opacity: 1; } 50% { transform: translate(3px, -6px) scaleY(1.08); opacity: .75; } }
+.tw { animation: twinkle 3s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .2; } }
 @media (prefers-reduced-motion: reduce) {
-  #steam circle { animation: none; opacity: .5; }
+  .waft, .tw { animation: none; }
   .floater.go { animation-duration: 600ms; }
-  #kettle.tilt { animation: none; }
 }
 </style>
 </head>
@@ -85,51 +102,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
 <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M3.7 2.3a1.6 1.6 0 0 0-.7 1.35v16.7c0 .56.27 1.06.7 1.35l9.06-9.7L3.7 2.3Z"/><path d="m15.6 9.02-2.84 3.04 2.84 3.04 3.6-2.02c.86-.48.86-1.56 0-2.04l-3.6-2.02Z"/><path d="m13.9 13.2-9.1 9.74c.4.2.9.18 1.36-.08l9.44-5.3-1.7-4.36Z" opacity=".85"/><path d="M4.8 1.06c-.46-.26-.96-.28-1.36-.08l9.1 9.74 1.7-4.36L4.8 1.06Z" opacity=".7"/></symbol>
 <symbol id="i-apple" viewBox="0 0 24 24" fill="currentColor"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.87-.76-1.47.02-2.83.86-3.59 2.18-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.24 2.73 2.2 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.41 1.2-2.47-.03-.01-2.3-.88-2.3-3.52ZM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.64-1.05 1.67-.92 2.66.97.08 1.96-.49 2.56-1.21Z"/></symbol>
 </defs></svg>
-<svg id="street" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 200" role="img" aria-label="A chai tapri on a city street under the live sky in India. Customers walk up for chai and pay.">
-  <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop id="sky-top" offset="0" stop-color="#2F4E6E"/><stop id="sky-bot" offset="1" stop-color="#F59A5C"/></linearGradient>
-    <radialGradient id="bulbglow"><stop offset="0" stop-color="#FFE1AD" stop-opacity=".9"/><stop offset="1" stop-color="#FFE1AD" stop-opacity="0"/></radialGradient>
-  </defs>
-  <rect id="sky-rect" x="-2000" y="-2000" width="4400" height="2160" fill="url(#sky)"/>
-  <g id="stars" fill="#FFF8EC" opacity="0"></g>
-  <circle id="sun" cx="300" cy="60" r="16" fill="#FFE1AD"/>
-  <g id="bld" fill="#3A3F4F">
-    <rect x="-640" y="68" width="64" height="106"/><rect x="-570" y="94" width="60" height="80"/><rect x="-500" y="72" width="56" height="102"/><rect x="-430" y="86" width="60" height="88"/><rect x="-360" y="60" width="52" height="114"/><rect x="-300" y="90" width="64" height="84"/><rect x="-230" y="74" width="50" height="100"/><rect x="-170" y="96" width="56" height="78"/><rect x="-110" y="66" width="48" height="108"/><rect x="-60" y="84" width="52" height="90"/>
-    <rect x="0" y="70" width="46" height="100"/><rect x="40" y="92" width="38" height="80"/><rect x="278" y="62" width="50" height="110"/><rect x="322" y="88" width="40" height="84"/>
-    <rect x="360" y="74" width="48" height="100"/><rect x="404" y="96" width="52" height="78"/><rect x="452" y="64" width="46" height="110"/><rect x="494" y="88" width="60" height="86"/><rect x="550" y="70" width="50" height="104"/><rect x="596" y="92" width="58" height="82"/><rect x="650" y="62" width="52" height="112"/><rect x="700" y="84" width="60" height="90"/><rect x="756" y="74" width="50" height="100"/><rect x="804" y="96" width="64" height="78"/><rect x="864" y="66" width="56" height="108"/><rect x="916" y="90" width="60" height="84"/><rect x="970" y="70" width="60" height="104"/>
-  </g>
-  <g id="windows" fill="#FFE1AD" opacity="0">
-    <rect x="-626" y="82" width="8" height="10"/><rect x="-552" y="108" width="8" height="10"/><rect x="-486" y="86" width="8" height="10"/><rect x="-466" y="110" width="8" height="10"/><rect x="-412" y="100" width="8" height="10"/><rect x="-346" y="76" width="8" height="10"/><rect x="-326" y="98" width="8" height="10"/><rect x="-282" y="104" width="8" height="10"/><rect x="-216" y="88" width="8" height="10"/><rect x="-150" y="110" width="8" height="10"/><rect x="-96" y="80" width="8" height="10"/><rect x="-80" y="104" width="8" height="10"/><rect x="-44" y="98" width="8" height="10"/>
-    <rect x="10" y="84" width="8" height="10"/><rect x="26" y="104" width="8" height="10"/><rect x="290" y="78" width="8" height="10"/><rect x="306" y="100" width="8" height="10"/><rect x="334" y="104" width="8" height="10"/>
-    <rect x="374" y="88" width="8" height="10"/><rect x="420" y="110" width="8" height="10"/><rect x="466" y="78" width="8" height="10"/><rect x="480" y="102" width="8" height="10"/><rect x="512" y="104" width="8" height="10"/><rect x="566" y="84" width="8" height="10"/><rect x="614" y="106" width="8" height="10"/><rect x="664" y="76" width="8" height="10"/><rect x="680" y="100" width="8" height="10"/><rect x="718" y="98" width="8" height="10"/><rect x="772" y="88" width="8" height="10"/><rect x="822" y="110" width="8" height="10"/><rect x="880" y="80" width="8" height="10"/><rect x="934" y="104" width="8" height="10"/><rect x="988" y="84" width="8" height="10"/>
-  </g>
-  <rect id="ground" x="-2000" y="160" width="4400" height="2000" fill="#6E5843"/>
-  <rect x="-2000" y="158" width="4400" height="4" fill="#231A14" opacity=".35"/>
-
-  <!-- tapri -->
-  <polygon points="92,58 268,58 280,78 80,78" fill="#1F6F6B" stroke="#231A14" stroke-width="2"/>
-  <path d="M80 78 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0 q12 8 25 0" fill="#1F6F6B" stroke="#231A14" stroke-width="2"/>
-  <rect x="98" y="78" width="4" height="34" fill="#231A14"/><rect x="258" y="78" width="4" height="34" fill="#231A14"/>
-  <circle id="bulb-glow" cx="180" cy="92" r="46" fill="url(#bulbglow)" opacity="0"/>
-  <line x1="180" y1="78" x2="180" y2="88" stroke="#231A14" stroke-width="1.5"/>
-  <circle id="bulb" cx="180" cy="91" r="4" fill="#A8916F" stroke="#231A14" stroke-width="1.5"/>
-  <rect x="92" y="112" width="176" height="48" rx="3" fill="#B5562F" stroke="#231A14" stroke-width="2"/>
-  <rect x="92" y="108" width="176" height="8" fill="#8A5A00" stroke="#231A14" stroke-width="2"/>
-  <g fill="#B5562F" stroke="#231A14" stroke-width="1.5"><polygon points="106,96 116,96 114,108 108,108"/><polygon points="120,96 130,96 128,108 122,108"/><polygon points="134,96 144,96 142,108 136,108"/></g>
-  <rect x="196" y="98" width="40" height="10" rx="2" fill="#8EC3BF" stroke="#231A14" stroke-width="1.5"/>
-  <g id="kettle">
-    <path d="M232 80 L248 68" stroke="#231A14" stroke-width="5" stroke-linecap="round"/><path d="M232 80 L248 68" stroke="#B87400" stroke-width="2.5" stroke-linecap="round"/>
-    <ellipse cx="216" cy="86" rx="18" ry="12" fill="#F4A300" stroke="#231A14" stroke-width="2"/>
-    <path d="M204 76 q12 -16 24 0" fill="none" stroke="#231A14" stroke-width="2.5"/>
-    <ellipse cx="216" cy="75" rx="6" ry="2.5" fill="#B87400" stroke="#231A14" stroke-width="1.5"/>
-  </g>
-  <g id="steam" fill="#FFF8EC"><circle cx="248" cy="62" r="5"/><circle cx="244" cy="62" r="4"/><circle cx="250" cy="64" r="4.5"/></g>
-
-  <!-- customers walk in here -->
-  <g id="customers" stroke="#231A14" stroke-width="2"></g>
-
-  <rect id="shade" x="-2000" y="-2000" width="4400" height="4400" fill="#0B2328" opacity="0" pointer-events="none"/>
-</svg>
+<svg id="street" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="A chai tapri on a city street under the live sky in India. A train runs behind it, and customers walk up for chai and pay."></svg>
 
 <header class="top">
   <h1 class="mark">Kadak</h1>
@@ -140,16 +113,26 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   </div>
 </header>
 
-<footer class="foot">
-  <nav aria-label="Legal and support">
-    <a href="/privacy-policy/">Privacy Policy</a>
-    <a href="/terms/">Terms of Use</a>
-    <a href="/support/">Support</a>
-    <a href="/support/#3-data-deletion">Delete my data</a>
-    <a href="mailto:tappstudio.in@gmail.com">Contact</a>
-  </nav>
-  <p>© 2026 <a href="https://tappstudio.in">tappStudio</a>. Kadak: Idle Chai Empire.</p>
-</footer>
+<div class="bottom">
+  <div class="controls">
+    <button class="icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Sound" title="Sound on/off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><g class="on"><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18 6.5a7.8 7.8 0 0 1 0 11"/></g><g class="off"><path d="M16 9.5l5 5M21 9.5l-5 5"/></g></svg></button>
+    <div class="clock">
+      <input id="hour" type="range" min="0" max="24" step="0.25" value="12" aria-label="Time of day in India">
+      <output id="time" for="hour">12:00 pm</output>
+    </div>
+    <button class="live" id="now" type="button" aria-pressed="true" title="Follow the time in India">Live</button>
+  </div>
+  <footer class="foot">
+    <nav aria-label="Legal and support">
+      <a href="/privacy-policy/">Privacy Policy</a>
+      <a href="/terms/">Terms of Use</a>
+      <a href="/support/">Support</a>
+      <a href="/support/#3-data-deletion">Delete my data</a>
+      <a href="mailto:tappstudio.in@gmail.com">Contact</a>
+    </nav>
+    <p>© 2026 <a href="https://tappstudio.in">tappStudio</a>. Kadak: Idle Chai Empire.</p>
+  </footer>
+</div>
 
 <script>
 (function () {
@@ -157,148 +140,589 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   const svg = $('#street'), NS = 'http://www.w3.org/2000/svg';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Fit: keep the tapri and its customers (x 15..305) in view ---------- */
-  const CORE_W = 290, CORE_C = 160;
-  let vb = { x: 0, y: 0, w: 390, h: 200 }, scale = 1;
-  function fit() {
-    const W = innerWidth, H = innerHeight;
-    // Tall phones get the street higher up, so the sky isn't one big empty band.
-    const ground = H * (H > W * 1.3 ? 0.7 : 0.82);
-    // As wide as the screen allows, but leave room above the canopy for the header.
-    scale = Math.max(0.6, Math.min(W / CORE_W, (ground - 230) / 110, 3));
-    vb.w = W / scale; vb.h = H / scale;
-    vb.x = CORE_C - vb.w / 2;
-    vb.y = 160 - ground / scale;
-    svg.setAttribute('viewBox', `${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}`);
-    $('#sky-rect').setAttribute('y', vb.y.toFixed(2));
-    $('#sky-rect').setAttribute('height', (160 - vb.y).toFixed(2));
-    placeStars();
-    setSky(hourNow());
-  }
-  const toScreen = (x, y) => [(x - vb.x) * scale, (y - vb.y) * scale];
-
-  /* ---------- Stars (seeded, so they don't jump on resize) ---------- */
-  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
-  const STAR = (() => { const r = rng(7), a = []; for (let i = 0; i < 140; i++) a.push([r(), r(), 0.5 + r() * 0.9]); return a; })();
-  function placeStars() {
-    const g = $('#stars'); g.textContent = '';
-    const top = vb.y, bottom = 62;
-    STAR.forEach(([u, v, r]) => {
-      const c = document.createElementNS(NS, 'circle');
-      c.setAttribute('cx', (vb.x + u * vb.w).toFixed(1));
-      c.setAttribute('cy', (top + v * (bottom - top)).toFixed(1));
-      c.setAttribute('r', (r / Math.max(scale, 1) * 1.4).toFixed(2));
-      c.setAttribute('opacity', (0.35 + (1 - v) * 0.6).toFixed(2));
-      g.appendChild(c);
-    });
-  }
-
-  /* ---------- Live sky, by the time in India ---------- */
-  const KF = [ // hour, skyTop, skyBottom, ground, buildings, night(0..1)
+  /* The street from the App Store header (Kadak repo, store/creative/src/video/header), in its hero units:
+     the tapri spans x 32..430, the kerb is at y 872. Pital palette and the game's live sky keyframes. */
+  const C = {
+    ink: '#231A14', nightDeep: '#0B2328', nightRaised: '#1A4650', teal: '#1F6F6B', steam: '#CFE3DF', paper: '#FFF8EC',
+    jute: '#E9DABD', chaiLight: '#A8916F', chaiDark: '#6E5843', marigold: '#F4A300', marigoldDeep: '#B87400',
+    marigoldInk: '#8A5A00', marigoldTint: '#FFE1AD', kulhad: '#B5562F', kulhadTint: '#F5D9C8', kesar: '#E8742A',
+    kesarDeep: '#B5521A', kesarLight: '#F59A5C', chilli: '#C8352B', elaichi: '#5E9C3A', tealLight: '#8EC3BF', slate: '#3A3F4F',
+  };
+  const SKY = [ // hour, top, bottom, ground, buildings, night (0..1)
     [0, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1], [5, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1],
     [7, '#8FB6C8', '#E9E4D6', '#8A8172', '#6E8C96', .15], [10.5, '#5FA9C9', '#CFE7EE', '#A99A80', '#7C97A0', 0],
     [15.5, '#5FA9C9', '#CFE7EE', '#A99A80', '#7C97A0', 0], [18, '#2F4E6E', '#F59A5C', '#6E5843', '#3A3F4F', .55],
     [20, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1], [24, '#0B2328', '#1A4650', '#0F2A30', '#163C44', 1],
   ];
-  const hex2 = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
-  const mix = (a, b, t) => '#' + hex2(a).map((v, i) => Math.round(v + (hex2(b)[i] - v) * t).toString(16).padStart(2, '0')).join('');
+  const SUNRISE = 6, SUNSET = 19.3;
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const smooth = t => t * t * (3 - 2 * t);
+  const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, t) => '#' + rgb(a).map((v, i) => Math.round(lerp(v, rgb(b)[i], t)).toString(16).padStart(2, '0')).join('');
+  function hash(n) { let x = (n * 2654435761) >>> 0; x ^= x >>> 15; x = Math.imul(x, 2246822519) >>> 0; x ^= x >>> 13; return x >>> 0; }
+  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  function skyAt(h) {
+    let i = 0; while (i < SKY.length - 2 && h > SKY[i + 1][0]) i++;
+    const a = SKY[i], b = SKY[i + 1], k = clamp((h - a[0]) / (b[0] - a[0] || 1));
+    const s = { top: mix(a[1], b[1], k), bottom: mix(a[2], b[2], k), ground: mix(a[3], b[3], k), buildings: mix(a[4], b[4], k), night: lerp(a[5], b[5], k) };
+    s.far = mix(s.buildings, s.bottom, .45);
+    return s;
+  }
+
+  /* ---------- Drawing helpers ---------- */
+  function el(tag, a, parent = svg) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in a) e.setAttribute(k, a[k]);
+    parent.append(e);
+    return e;
+  }
+  const set = (e, a) => { for (const k in a) e.setAttribute(k, a[k]); };
+  const ink = (w = 2) => ({ stroke: C.ink, 'stroke-width': w });
+  function steam(d, w, parent, cls = 'waft') {
+    const s = el('g', { class: cls }, parent);
+    el('path', { d, fill: 'none', stroke: C.ink, 'stroke-width': w + 3.5 }, s);
+    el('path', { d, fill: 'none', stroke: C.steam, 'stroke-width': w }, s);
+  }
+  function sparkle(cx, cy, r, parent) {
+    const k = r * .28;
+    return el('path', { d: `M${cx} ${cy - r}Q${cx + k} ${cy - k} ${cx + r} ${cy}Q${cx + k} ${cy + k} ${cx} ${cy + r}Q${cx - k} ${cy + k} ${cx - r} ${cy}Q${cx - k} ${cy - k} ${cx} ${cy - r}Z`, fill: C.marigoldTint, ...ink(1.5) }, parent);
+  }
+  function kulhad(x, y, s, parent) {
+    const k = el('g', { transform: `translate(${x} ${y}) scale(${s})` }, parent);
+    el('path', { d: 'M-11 -26L11 -26L8 0L-8 0Z', fill: C.kulhad, ...ink(2) }, k);
+    el('path', { d: 'M-10.2 -18L10.2 -18L9.6 -13L-9.6 -13Z', fill: C.kulhadTint }, k);
+    el('ellipse', { cx: 0, cy: -26, rx: 10, ry: 2.6, fill: C.chaiLight, ...ink(1.5) }, k);
+  }
+
+  // The world is drawn wide enough for any screen; fit() only moves the viewBox.
+  const L = -3000, R = 3400, TOP = -4000, BOTTOM = 3000, KERB = 872, FEET = 860;
+  const live = [];                         // [element, attribute, (sky) => value], set when the hour changes
+
+  /* ---------- Sky: stepped bands, stars, sun, moon, birds ---------- */
+  live.push([el('rect', { x: L, y: TOP, width: R - L, height: BOTTOM - TOP }), 'fill', s => s.top]);
+  [[262, 5], [318, 5], [372, 6], [410, 6], [442, 6], [470, 5]].forEach(([y, amp], i) => {
+    let d = `M${L} 960V${y}`;
+    for (let x = L; x < R; x += 22) d += `Q${x + 11} ${y + amp} ${x + 22} ${y}`;
+    live.push([el('path', { d: d + 'V960Z' }), 'fill', s => mix(s.top, s.bottom, (i + 1) / 6)]);
+  });
+  const stars = el('g', {});
+  live.push([stars, 'opacity', s => clamp((s.night - .5) * 2)]);
+
+  const sun = el('g', {});
+  const halo = el('circle', { r: 118, 'fill-opacity': .22 }, sun);
+  const disc = el('circle', { r: 78, ...ink(2) }, sun);
+  el('path', { d: 'M-52 -20Q-40 -48 -12 -56', fill: 'none', stroke: C.paper, 'stroke-width': 5 }, sun);
+
+  const defs = el('defs', {});
+  const mask = el('mask', { id: 'crescent', maskContentUnits: 'userSpaceOnUse' }, defs);
+  el('circle', { r: 46, fill: '#fff' }, mask);
+  el('circle', { cx: 22, cy: -14, r: 40, fill: '#000' }, mask);
+  const moon = el('g', {});
+  el('circle', { r: 86, fill: C.steam, 'fill-opacity': .08 }, moon);
+  el('circle', { r: 46, fill: C.steam, mask: 'url(#crescent)' }, moon);
+  el('path', { d: 'M-40 -22A46 46 0 0 0 -8 45', fill: 'none', ...ink(2) }, moon);
+
+  const flock = el('g', { fill: 'none', stroke: C.ink, 'stroke-width': 3 });
+  live.push([flock, 'opacity', s => clamp(1 - s.night * 3)]);
+
+  /* ---------- Skyline: a far row in the haze, then the near row with windows, tanks and aerials ---------- */
+  for (let i = Math.floor(L / 30); i * 30 < R; i++) {
+    const h = hash(i + 3), x = i * 30 + (h % 8), w = 26 - (h % 3) * 4, t = 470 - (h % 5) * 16;
+    live.push([el('rect', { x, y: t, width: w, height: 160 }), 'fill', s => s.far]);
+    if (h % 4 === 0) live.push([el('rect', { x: x + w / 2 - 1, y: t - 14, width: 2, height: 14 }), 'fill', s => s.far]);
+  }
+  const near = el('g', {}), roof = el('g', {}), windows = el('g', { fill: C.marigoldTint }), lit = [];
+  live.push([near, 'fill', s => s.buildings]);
+  live.push([roof, 'fill', s => mix(s.buildings, C.ink, .3)]);
+  live.push([roof, 'stroke', s => mix(s.buildings, C.ink, .3)]);
+  for (let i = Math.floor(L / 44); i * 44 < R; i++) {
+    const h = hash(i * 7 + 11), x = i * 44 + (h % 9), w = 40 - (h % 3) * 6, t = 528 - (h % 4) * 20;
+    el('rect', { x, y: t, width: w, height: 140 }, near);
+    el('rect', { x: x - 2, y: t - 5, width: w + 4, height: 6 }, near);
+    const kind = (h >>> 8) % 5;
+    if (kind === 0) {                       // a water tank on stilts
+      el('rect', { x: x + w - 16, y: t - 22, width: 12, height: 14, rx: 2 }, roof);
+      el('path', { d: `M${x + w - 14} ${t - 8}V${t - 5}M${x + w - 6} ${t - 8}V${t - 5}`, fill: 'none', 'stroke-width': 1.5 }, roof);
+    } else if (kind === 1) {                // a dish and an aerial
+      el('path', { d: `M${x + 8} ${t - 5}V${t - 26}M${x + 3} ${t - 22}H${x + 13}M${x + 4} ${t - 16}H${x + 12}`, fill: 'none', 'stroke-width': 1.5 }, roof);
+      el('path', { d: `M${x + w - 12} ${t - 12}a6 6 0 0 1 8 -6z`, 'stroke-width': 1 }, roof);
+    } else if (kind === 2) {                // a stair head
+      el('rect', { x: x + 4, y: t - 15, width: 13, height: 10 }, roof);
+    }
+    for (let wy = t + 10; wy < 596; wy += 16) for (let wx = x + 6; wx < x + w - 8; wx += 11) {
+      const r = (hash(wx * 13 + wy * 7) >>> 6) % 100;
+      if (r < 46) lit.push(el('rect', { x: wx, y: wy, width: 6, height: 8, opacity: r < 40 ? 1 : 0 }, windows));
+    }
+    if (kind === 3) for (let wy = t + 14; wy < 590; wy += 32) el('rect', { x: x + w - 6, y: wy, width: 7, height: 5 }, roof); // AC units
+  }
+  live.push([windows, 'opacity', s => clamp(s.night * 1.3)]);
+
+  /* ---------- The train along the foot of the buildings ---------- */
+  const COACHES = 8, VY = 600, TRAIN_LEN = (COACHES * 178 + 186) * .75;
+  el('rect', { x: L, y: VY - 1, width: R - L, height: 5, fill: C.slate, ...ink(1.5) });
+  const tr = el('g', { display: 'none' });
+  for (let i = 0; i < COACHES; i++) {
+    const x = i * 178;
+    el('rect', { x: x + 166, y: -26, width: 16, height: 4, fill: C.ink }, tr);
+    el('rect', { x, y: -52, width: 168, height: 50, rx: 6, fill: C.teal, ...ink(2.4) }, tr);
+    el('rect', { x: x + 2, y: -16, width: 164, height: 5, fill: C.marigold }, tr);
+    for (let k = 0; k < 6; k++) el('rect', { x: x + 12 + k * 26, y: -44, width: 16, height: 16, rx: 3, fill: C.marigoldTint, ...ink(1.8) }, tr);
+    for (const o of [24, 144]) el('circle', { cx: x + o, cy: -2, r: 8, fill: C.slate, ...ink(2) }, tr);
+  }
+  const ex = COACHES * 178;
+  el('path', { d: `M${ex} -2V-38Q${ex} -42 ${ex + 4} -42H${ex + 128}V-2Z`, fill: C.kesarDeep, ...ink(2.4) }, tr);
+  el('path', { d: `M${ex + 128} -2V-60Q${ex + 128} -66 ${ex + 134} -66H${ex + 164}Q${ex + 170} -66 ${ex + 170} -60V-2Z`, fill: C.kesarDeep, ...ink(2.4) }, tr);
+  el('path', { d: `M${ex + 170} -2V-30H${ex + 178}Q${ex + 186} -30 ${ex + 186} -22V-2Z`, fill: C.kesarDeep, ...ink(2.4) }, tr);
+  el('rect', { x: ex + 2, y: -16, width: 182, height: 5, fill: C.marigold }, tr);
+  el('rect', { x: ex + 136, y: -58, width: 26, height: 18, rx: 3, fill: C.marigoldTint, ...ink(1.8) }, tr);
+  const headlamp = el('circle', { cx: ex + 182, cy: -20, r: 5, fill: C.marigoldTint, ...ink(1.8) }, tr);
+  for (const o of [26, 62, 150]) el('circle', { cx: ex + o, cy: -2, r: 8, fill: C.slate, ...ink(2) }, tr);
+
+  /* ---------- Pavement, kerb and road ---------- */
+  live.push([el('rect', { x: L, y: 606, width: R - L, height: BOTTOM - 606 }), 'fill', s => s.ground]);
+  el('rect', { x: L, y: 602, width: R - L, height: 6, fill: C.ink, 'fill-opacity': .35 });
+  for (let y = 640; y < KERB - 2; y += 34) el('path', { d: `M${L} ${y}H${R}`, stroke: C.ink, 'stroke-opacity': .25, 'stroke-width': 1 });
+  live.push([el('rect', { x: L, y: KERB, width: R - L, height: 10, ...ink(2) }), 'fill', s => mix(s.ground, C.paper, .3)]);
+  live.push([el('rect', { x: L, y: KERB + 10, width: R - L, height: BOTTOM - KERB }), 'fill', s => mix(s.ground, C.slate, .6)]);
+  for (let x = L; x < R; x += 120) el('rect', { x, y: KERB + 60, width: 60, height: 6, fill: C.paper, 'fill-opacity': .35 });
+
+  /* ---------- A bench with two kulhads cooling on it ---------- */
+  const BX = -540, BW = 210;
+  el('path', { d: `M${BX + 6} 862H${BX + BW + 10}L${BX + BW + 22} 872H${BX + 18}Z`, fill: C.ink, 'fill-opacity': .25 });
+  for (const x of [BX + 16, BX + BW - 26]) el('rect', { x, y: 824, width: 10, height: 38, fill: C.chaiDark, ...ink(2) });
+  el('rect', { x: BX + 4, y: 786, width: BW - 8, height: 12, rx: 3, fill: C.marigoldDeep, ...ink(2) });
+  el('rect', { x: BX + 4, y: 801, width: BW - 8, height: 9, rx: 3, fill: C.marigoldDeep, ...ink(2) });
+  for (const x of [BX + 18, BX + BW - 28]) el('rect', { x, y: 786, width: 8, height: 28, fill: C.chaiDark, ...ink(1.5) });
+  el('rect', { x: BX, y: 812, width: BW, height: 14, rx: 3, fill: C.marigold, ...ink(2) });
+  steam(`M${BX + 62} 784C${BX + 54} 768 ${BX + 70} 760 ${BX + 64} 744`, 4, svg);
+  for (const [x, s] of [[BX + 64, 1.1], [BX + 150, 1]]) kulhad(x, 812, s, svg);
+
+  /* ---------- The tapri, with Bablu Bhaiya's two faces stacked and the kettle on a pivot ---------- */
+  const pool = el('ellipse', { cx: 220, cy: 846, rx: 300, ry: 30, fill: C.marigoldTint });
+  live.push([pool, 'fill-opacity', s => .06 + s.night * .12]);
+  const T = el('g', { transform: 'translate(-48.4 -120) scale(1.22)' });
+  el('path', { d: 'M60 790H392L410 812H78Z', fill: C.ink, 'fill-opacity': .25 }, T);
+  el('rect', { x: 66, y: 520, width: 308, height: 140, fill: C.nightRaised, ...ink(2) }, T);
+  live.push([el('circle', { cx: 220, cy: 560, r: 74, fill: C.marigoldTint }, T), 'fill-opacity', s => .14 + s.night * .14]);
+  el('circle', { cx: 220, cy: 560, r: 44, fill: C.marigoldTint, 'fill-opacity': .2 }, T);
+  // Shelf of jars and a tin behind him.
+  el('path', { d: 'M74 548H200', ...ink(2) }, T);
+  for (const [x, c] of [[84, C.kesar], [104, C.elaichi], [124, C.chilli]]) {
+    el('rect', { x, y: 530, width: 14, height: 18, rx: 3, fill: c, ...ink(1.5) }, T);
+    el('rect', { x: x - 1, y: 526, width: 16, height: 5, rx: 1, fill: C.slate, ...ink(1.2) }, T);
+  }
+  el('rect', { x: 146, y: 524, width: 22, height: 24, rx: 2, fill: C.tealLight, ...ink(1.5) }, T);
+  el('path', { d: 'M146 532H168', ...ink(1.2) }, T);
+
+  const bablu = el('g', {}, T);
+  const face = {
+    warm: el('image', { href: '/assets/art/ustaad-cutting_chai_kettle-p96-warm.svg', x: 210, y: 496, width: 160, height: 160 }, bablu),
+    beam: el('image', { href: '/assets/art/ustaad-cutting_chai_kettle-p96-beam.svg', x: 210, y: 496, width: 160, height: 160, opacity: 0 }, bablu),
+  };
+  for (const x of [70, 362]) el('rect', { x, y: 506, width: 8, height: 154, fill: C.chaiDark, ...ink(2) }, T);
+  el('path', { d: 'M78 470H362L392 512H48Z', fill: C.teal, ...ink(2) }, T);
+  for (let i = 0; i < 9; i += 2) {
+    const t0 = i / 9, t1 = (i + 1) / 9;
+    el('path', { d: `M${78 + 284 * t0} 470H${78 + 284 * t1}L${48 + 344 * t1} 512H${48 + 344 * t0}Z`, fill: C.paper }, T);
+  }
+  el('path', { d: 'M78 470H362L392 512H48Z', fill: 'none', ...ink(2) }, T);
+  let val = 'M48 512';
+  for (let x = 48; x < 392; x += 344 / 9) val += `Q${x + 344 / 18} 532 ${x + 344 / 9} 512`;
+  el('path', { d: val + 'Z', fill: C.teal, ...ink(2) }, T);
+  // A marigold toran along the valance.
+  for (let x = 62; x < 384; x += 19.1) el('circle', { cx: x, cy: 528 + ((x / 19.1) % 2 ? 0 : 3), r: 4.2, fill: (x / 19.1) % 3 < 1 ? C.kesar : C.marigold, ...ink(1.2) }, T);
+
+  el('path', { d: 'M126 426H314L322 434V462L314 470H126L118 462V434Z', fill: C.ink, transform: 'translate(3 4)' }, T);
+  el('path', { d: 'M126 426H314L322 434V462L314 470H126L118 462V434Z', fill: C.marigold, ...ink(2) }, T);
+  el('path', { d: 'M132 432H308L314 438V458L308 464H132L126 458V438Z', fill: 'none', stroke: C.marigoldInk, 'stroke-width': 1.5 }, T);
+  el('text', { x: 220, y: 457, 'text-anchor': 'middle', fill: C.ink, 'font-family': "'Baloo 2'", 'font-weight': 800, 'font-size': 25, 'letter-spacing': 3 }, T).textContent = 'KADAK CHAI';
+  for (const x of [150, 290]) el('path', { d: `M${x} 426V408`, ...ink(1.5) }, T);
+  // Nimbu-mirchi for luck, hanging off the awning's left corner.
+  el('path', { d: 'M62 512V538', ...ink(1.2) }, T);
+  el('circle', { cx: 62, cy: 541, r: 4, fill: '#E6D24A', ...ink(1.2) }, T);
+  for (const [y, dx] of [[548, -3], [556, 2], [564, -2]]) el('path', { d: `M${62 + dx - 2} ${y}L${62 + dx + 2} ${y}L${62 + dx} ${y + 9}Z`, fill: y === 564 ? C.elaichi : C.chilli, ...ink(1) }, T);
+
+  el('path', { d: 'M220 522V540', ...ink(1.5) }, T);
+  const bulbGlowT = el('circle', { cx: 220, cy: 548, r: 30, fill: C.marigoldTint, 'fill-opacity': .35 }, T);
+  live.push([bulbGlowT, 'opacity', s => clamp(s.night * 1.4)]);
+  const bulb = el('circle', { cx: 220, cy: 546, r: 7, ...ink(1.5) }, T);
+  live.push([bulb, 'fill', s => mix(C.jute, C.marigoldTint, s.night)]);
+
+  steam('M124 590C110 570 136 560 126 540C118 524 134 514 130 502', 6, T);
+  steam('M140 592C150 578 140 568 150 556', 4, T, 'waft b');
+  const puff = [0, 1, 2].map(() => el('circle', { r: 0, fill: C.steam, ...ink(1.5) }, T));
+
+  el('rect', { x: 92, y: 618, width: 90, height: 26, rx: 3, fill: C.slate, ...ink(2) }, T);
+  el('path', { d: 'M108 618Q114 606 120 618Q126 604 134 618Q140 606 146 618Q152 604 160 618Q166 608 170 618', fill: C.kesar, ...ink(1.5) }, T);
+  const kettle = el('image', { href: '/assets/art/kettle.svg', x: 92, y: 556, width: 90, height: 64 }, T);
+
+  el('rect', { x: 52, y: 640, width: 336, height: 14, fill: C.marigoldDeep, ...ink(2) }, T);
+  el('rect', { x: 60, y: 654, width: 320, height: 130, fill: C.kulhad, ...ink(2) }, T);
+  el('rect', { x: 60, y: 676, width: 320, height: 26, fill: C.marigoldTint }, T);
+  for (let x = 64; x < 376; x += 20) el('path', { d: `M${x} 702L${x + 10} 680L${x + 20} 702Z`, fill: C.teal }, T);
+  el('path', { d: 'M60 676H380M60 702H380', ...ink(1.5) }, T);
+  el('rect', { x: 60, y: 654, width: 320, height: 130, fill: 'none', ...ink(2) }, T);
+  // A price board on the counter front: "CUTTING ₹10".
+  el('rect', { x: 236, y: 718, width: 112, height: 46, rx: 4, fill: C.nightDeep, ...ink(2) }, T);
+  el('text', { x: 292, y: 738, 'text-anchor': 'middle', fill: C.paper, 'font-family': "'Baloo 2'", 'font-weight': 800, 'font-size': 14, 'letter-spacing': 1.5 }, T).textContent = 'CUTTING';
+  el('text', { x: 292, y: 758, 'text-anchor': 'middle', fill: C.marigold, 'font-family': "'Baloo 2'", 'font-weight': 800, 'font-size': 18 }, T).textContent = '₹10';
+  // A biscuit jar on the counter's left.
+  el('rect', { x: 196, y: 610, width: 30, height: 30, rx: 6, fill: C.steam, 'fill-opacity': .85, ...ink(1.8) }, T);
+  el('rect', { x: 199, y: 604, width: 24, height: 8, rx: 2, fill: C.kesar, ...ink(1.5) }, T);
+  for (const [x, y] of [[204, 622], [216, 628], [208, 633]]) el('circle', { cx: x, cy: y, r: 4, fill: C.marigoldDeep, ...ink(1) }, T);
+  steam('M338 614C332 598 346 590 340 576', 4, T, 'waft b');
+  for (const [x, s] of [[314, .95], [338, 1.1], [362, .95]]) kulhad(x, 641, s, T);
+
+  /* ---------- A street lamp, and a cycle with a milk can ---------- */
+  const LX = 600;
+  el('rect', { x: LX - 6, y: 858, width: 24, height: 10, rx: 2, fill: C.slate, ...ink(2) });
+  el('rect', { x: LX, y: 440, width: 12, height: 420, fill: C.slate, ...ink(2) });
+  el('path', { d: `M${LX + 6} 446Q${LX + 6} 420 ${LX + 30} 420H${LX + 34}`, fill: 'none', stroke: C.ink, 'stroke-width': 9 });
+  el('path', { d: `M${LX + 6} 446Q${LX + 6} 420 ${LX + 30} 420H${LX + 34}`, fill: 'none', stroke: C.slate, 'stroke-width': 5 });
+  el('path', { d: `M${LX + 20} 424H${LX + 48}L${LX + 42} 436H${LX + 26}Z`, fill: C.slate, ...ink(2) });
+  // A poster pasted on the pole.
+  el('rect', { x: LX - 4, y: 640, width: 20, height: 28, fill: C.paper, ...ink(1.2), transform: `rotate(-4 ${LX + 6} 654)` });
+  el('path', { d: `M${LX} 648H${LX + 12}M${LX} 655H${LX + 10}M${LX} 662H${LX + 12}`, stroke: C.chilli, 'stroke-width': 2, transform: `rotate(-4 ${LX + 6} 654)` });
+
+  const CX = 660, CY = 850;
+  el('path', { d: `M${CX - 34} ${CY + 18}H${CX + 140}L${CX + 150} ${CY + 24}H${CX - 24}Z`, fill: C.ink, 'fill-opacity': .25 });
+  for (const x of [CX, CX + 116]) {
+    el('circle', { cx: x, cy: CY, r: 30, fill: 'none', stroke: C.ink, 'stroke-width': 7 });
+    el('circle', { cx: x, cy: CY, r: 30, fill: 'none', stroke: C.slate, 'stroke-width': 3 });
+    el('circle', { cx: x, cy: CY, r: 4, fill: C.steam, ...ink(1.5) });
+  }
+  const cycle = `M${CX} ${CY}L${CX + 44} ${CY}L${CX + 30} ${CY - 50}M${CX} ${CY}L${CX + 30} ${CY - 50}L${CX + 96} ${CY - 50}L${CX + 116} ${CY}M${CX + 44} ${CY}L${CX + 96} ${CY - 50}M${CX + 96} ${CY - 50}L${CX + 92} ${CY - 66}`;
+  el('path', { d: cycle, fill: 'none', stroke: C.ink, 'stroke-width': 8 });
+  el('path', { d: cycle, fill: 'none', stroke: C.teal, 'stroke-width': 4 });
+  el('path', { d: `M${CX + 78} ${CY - 70}Q${CX + 92} ${CY - 74} ${CX + 108} ${CY - 66}`, fill: 'none', stroke: C.ink, 'stroke-width': 4 });
+  el('path', { d: `M${CX + 20} ${CY - 56}H${CX + 42}`, stroke: C.ink, 'stroke-width': 7 });
+  el('circle', { cx: CX + 44, cy: CY, r: 7, fill: C.slate, ...ink(1.5) });
+  const struts = `M${CX - 20} ${CY - 46}L${CX} ${CY}M${CX + 10} ${CY - 46}L${CX} ${CY}M${CX + 10} ${CY - 49}L${CX + 28} ${CY - 52}`;
+  el('path', { d: struts, fill: 'none', stroke: C.ink, 'stroke-width': 6 });
+  el('path', { d: struts, fill: 'none', stroke: C.slate, 'stroke-width': 2.5 });
+  el('rect', { x: CX - 26, y: CY - 52, width: 40, height: 6, fill: C.slate, ...ink(1.5) });
+  el('path', { d: `M${CX - 22} ${CY - 52}V${CY - 92}Q${CX - 22} ${CY - 100} ${CX - 14} ${CY - 102}H${CX + 2}Q${CX + 10} ${CY - 100} ${CX + 10} ${CY - 92}V${CY - 52}Z`, fill: C.steam, ...ink(2) });
+  el('rect', { x: CX - 12, y: CY - 112, width: 16, height: 10, rx: 2, fill: C.slate, ...ink(1.5) });
+  el('path', { d: `M${CX - 22} ${CY - 76}H${CX + 10}`, ...ink(1.5) });
+  el('path', { d: `M${CX - 18} ${CY - 94}L${CX - 6} ${CY - 86}`, stroke: C.paper, 'stroke-width': 3 });
+
+  // A street dog asleep in the tapri's shade.
+  const dog = el('g', { transform: 'translate(-150 862)' });
+  el('ellipse', { cx: 0, cy: 4, rx: 46, ry: 6, fill: C.ink, 'fill-opacity': .25 }, dog);
+  el('path', { d: 'M-38 2Q-40 -24 -4 -26Q30 -28 34 -4Q36 2 30 2Z', fill: C.marigoldDeep, ...ink(2) }, dog);
+  el('path', { d: 'M24 2Q20 -18 36 -20Q52 -20 52 -6Q52 2 44 2Z', fill: C.marigoldDeep, ...ink(2) }, dog);
+  el('path', { d: 'M34 -18L40 -30L44 -18', fill: C.chaiDark, ...ink(1.5) }, dog);
+  el('path', { d: 'M40 -10Q43 -8 46 -10', fill: 'none', ...ink(1.5) }, dog);
+  el('path', { d: 'M-38 0Q-50 -4 -46 -14', fill: 'none', ...ink(3) }, dog);
+  el('path', { d: 'M-14 -22Q-6 -14 4 -22', fill: 'none', stroke: C.chaiDark, 'stroke-width': 3 }, dog);
+  const zzz = el('text', { x: 52, y: -30, fill: C.paper, stroke: C.ink, 'stroke-width': 3, 'paint-order': 'stroke fill', 'font-family': "'Baloo 2'", 'font-weight': 800, 'font-size': 16 }, dog);
+  zzz.textContent = 'z';
+
+  /* ---------- Customers come in here ---------- */
+  const crowdLayer = el('g', { stroke: C.ink, 'stroke-width': 2.4 });
+
+  /* ---------- After the night shade: the lights ---------- */
+  live.push([el('rect', { x: L, y: TOP, width: R - L, height: BOTTOM - TOP, fill: C.nightDeep, 'pointer-events': 'none' }), 'opacity', s => s.night * .26]);
+
+  const lampGlow = el('g', {});
+  el('ellipse', { cx: LX + 34, cy: 866, rx: 110, ry: 16, fill: C.marigoldTint, 'fill-opacity': .12 }, lampGlow);
+  el('path', { d: `M${LX + 26} 436L${LX - 40} 866H${LX + 110}L${LX + 42} 436Z`, fill: C.marigoldTint, 'fill-opacity': .06 }, lampGlow);
+  el('circle', { cx: LX + 30, cy: 444, r: 46, fill: C.marigoldTint, 'fill-opacity': .22 }, lampGlow);
+  live.push([lampGlow, 'opacity', s => clamp(s.night * 1.6)]);
+  live.push([el('circle', { cx: LX + 34, cy: 442, r: 6, ...ink(1.5) }), 'fill', s => mix(C.jute, C.marigoldTint, s.night)]);
+  live.push([headlamp, 'fill', s => mix(C.marigoldTint, '#FFFFFF', s.night)]);
+
+  const rope = [[L, 330], [-1100, 360], [-260, 372], [70, 352], [370, 352], [700, 372], [1500, 360], [R, 330]];
+  const bulbGlow = el('g', {}), bulbs = el('g', {});
+  for (let i = 0; i < rope.length - 1; i++) {
+    const [x0, y0] = rope[i], [x1, y1] = rope[i + 1], sag = 34, mx = (x0 + x1) / 2, my = (y0 + y1) / 2 + sag;
+    el('path', { d: `M${x0} ${y0}Q${mx} ${my + sag} ${x1} ${y1}`, fill: 'none', ...ink(1.5) }, bulbs);
+    const n = Math.max(3, Math.round((x1 - x0) / 46));
+    for (let k = 1; k < n; k++) {
+      const q = k / n, x = (1 - q) ** 2 * x0 + 2 * (1 - q) * q * mx + q * q * x1, y = (1 - q) ** 2 * y0 + 2 * (1 - q) * q * (my + sag) + q * q * y1;
+      el('path', { d: `M${x} ${y}V${y + 6}`, ...ink(1.2) }, bulbs);
+      el('circle', { cx: x, cy: y + 11, r: 9, fill: C.marigoldTint, 'fill-opacity': .3 }, bulbGlow);
+      const on = (i + k) % 3 === 1 ? C.kesarLight : C.marigoldTint;
+      live.push([el('circle', { cx: x, cy: y + 11, r: 4.5, ...ink(1.5) }, bulbs), 'fill', s => mix(C.jute, on, clamp(s.night * 1.5))]);
+    }
+  }
+  live.push([bulbGlow, 'opacity', s => clamp(s.night * 1.5)]);
+
+  /* ---------- Fit: keep the tapri and its nearest customers (x -80..520) in view, under the header ---------- */
+  const CORE_W = 600, CORE_C = 220, SIGN_TOP = 380;
+  let vb = { x: 0, y: 0, w: 1000, h: 1000 }, scale = 1, headerBottom = 0;
+  function fit() {
+    const W = innerWidth, H = innerHeight;
+    headerBottom = $('.top').getBoundingClientRect().bottom;
+    const ground = Math.min(H * (H > W * 1.3 ? .76 : .8), $('.bottom').getBoundingClientRect().top - 6);
+    scale = clamp(Math.min(W / CORE_W, (ground - headerBottom - 8) / (KERB - SIGN_TOP)), .35, 2.4);
+    vb.w = W / scale; vb.h = H / scale;
+    vb.x = CORE_C - vb.w / 2;
+    vb.y = KERB - ground / scale;
+    svg.setAttribute('viewBox', `${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}`);
+    placeStars();
+    paint();
+  }
+  const toScreen = (x, y) => [(x - vb.x) * scale, (y - vb.y) * scale];
+
+  function placeStars() {
+    stars.textContent = '';
+    const r = rng(7), top = vb.y, bottom = 440, n = Math.round(clamp(vb.w * (bottom - top) / 9000, 30, 220));
+    for (let i = 0; i < n; i++) {
+      const u = r(), v = r(), size = .8 + r() * 1.4;
+      el('circle', { cx: (vb.x + u * vb.w).toFixed(1), cy: (top + v * (bottom - top)).toFixed(1), r: (size / Math.min(scale, 1)).toFixed(2), fill: C.paper, opacity: (.35 + (1 - v) * .6).toFixed(2), class: i % 5 ? '' : 'tw', style: `animation-delay:${(-r() * 3).toFixed(2)}s` }, stars);
+    }
+    for (let i = 0; i < 9; i++) sparkle(vb.x + (.05 + r() * .9) * vb.w, top + (.1 + r() * .6) * (bottom - top), (4 + r() * 3) / Math.min(scale, 1), stars);
+  }
+
+  /* ---------- The hour: live in India, or wherever the slider puts it ---------- */
+  const slider = $('#hour'), out = $('#time'), nowBtn = $('#now');
   const forced = parseFloat(new URLSearchParams(location.search).get('h'));
+  let following = !(forced >= 0 && forced < 24), hour = following ? hourNow() : forced, sky = skyAt(hour);
   function hourNow() {
-    if (forced >= 0 && forced < 24) return forced;
     const ist = new Date(Date.now() + 5.5 * 3600e3);
     return ist.getUTCHours() + ist.getUTCMinutes() / 60;
   }
-  function setSky(h) {
-    let i = 0; while (i < KF.length - 2 && h > KF[i + 1][0]) i++;
-    const a = KF[i], b = KF[i + 1], t = (h - a[0]) / (b[0] - a[0] || 1);
-    const top = mix(a[1], b[1], t);
-    $('#sky-top').setAttribute('stop-color', top);
-    $('#sky-bot').setAttribute('stop-color', mix(a[2], b[2], t));
-    $('#ground').setAttribute('fill', mix(a[3], b[3], t));
-    $('#bld').setAttribute('fill', mix(a[4], b[4], t));
-    document.querySelector('meta[name=theme-color]').setAttribute('content', top);
-    document.body.style.background = top;
-    const night = a[5] + (b[5] - a[5]) * t;
-    $('#shade').setAttribute('opacity', (night * .28).toFixed(2));
-    $('#bulb-glow').setAttribute('opacity', night.toFixed(2));
-    $('#bulb').setAttribute('fill', night > .4 ? '#FFE1AD' : '#A8916F');
-    $('#windows').setAttribute('opacity', (night * .9).toFixed(2));
-    $('#stars').setAttribute('opacity', Math.max(0, (night - .5) * 2).toFixed(2));
-    // The sun arcs across what's on screen; at night a small moon sits up and to the right.
-    const sunUp = h > 5.5 && h < 19.5, p = (h - 5.5) / 14, sun = $('#sun');
-    const left = vb.x + vb.w * .08, span = vb.w * .84, peak = Math.max(vb.y + 40 / scale + 24, -70);
-    sun.setAttribute('cx', (sunUp ? left + p * span : vb.x + vb.w * .8).toFixed(0));
-    sun.setAttribute('cy', (sunUp ? 150 - Math.sin(p * Math.PI) * (150 - peak) : Math.max(vb.y + 30, 20)).toFixed(0));
-    sun.setAttribute('fill', sunUp ? (h > 16 || h < 7.5 ? '#F59A5C' : '#FFF8EC') : '#CFE3DF');
-    sun.setAttribute('r', sunUp ? 16 : 10);
+  function fmt(h) {
+    const m = Math.round(h * 60) % 1440, hh = Math.floor(m / 60), mm = m % 60;
+    return `${(hh % 12) || 12}:${String(mm).padStart(2, '0')} ${hh < 12 ? 'am' : 'pm'}`;
+  }
+  slider.style.setProperty('--day', `linear-gradient(90deg, ${Array.from({ length: 25 }, (_, i) => `${skyAt(i).top} ${(i / 24 * 100).toFixed(1)}%`).join(', ')})`);
+
+  function paint() {
+    sky = skyAt(hour);
+    for (const [e, attr, fn] of live) e.setAttribute(attr, fn(sky));
+    document.body.style.background = sky.top;
+    document.querySelector('meta[name=theme-color]').setAttribute('content', sky.top);
+    // Sun rises on the left of the screen at SUNRISE and sets on the right at SUNSET; the moon takes the night.
+    const horizon = 650, peak = vb.y + Math.max(90, headerBottom * .42) / scale, x0 = vb.x + vb.w * .1, x1 = vb.x + vb.w * .9;
+    const p = (hour - SUNRISE) / (SUNSET - SUNRISE), up = Math.sin(clamp(p) * Math.PI) ** .7;
+    const k = Math.min(1, Math.max(.45, scale)) / scale * .7;   // keep the disc a sensible size on screen
+    set(sun, { transform: `translate(${lerp(x0, x1, clamp(p)).toFixed(1)} ${(horizon - up * (horizon - peak)).toFixed(1)}) scale(${k.toFixed(3)})`, display: p > -.03 && p < 1.03 ? 'inline' : 'none' });
+    const sunFill = mix(C.kesarLight, C.paper, clamp(up * 1.5));
+    set(disc, { fill: sunFill }); set(halo, { fill: sunFill });
+    const q = ((hour - SUNSET + 24) % 24) / (24 - (SUNSET - SUNRISE)), mup = Math.sin(clamp(q) * Math.PI) ** .7;
+    set(moon, { transform: `translate(${lerp(x0, x1, clamp(q)).toFixed(1)} ${(horizon - mup * (horizon - peak)).toFixed(1)}) scale(${k.toFixed(3)})`, display: q > 0 && q < 1 ? 'inline' : 'none' });
+    slider.value = hour; out.textContent = fmt(hour);
+    nowBtn.setAttribute('aria-pressed', String(following));
+    Sound.night(sky.night);
+  }
+  slider.addEventListener('input', () => { following = false; hour = parseFloat(slider.value) % 24; paint(); });
+  nowBtn.addEventListener('click', () => { following = true; hour = hourNow(); paint(); });
+  setInterval(() => { if (following) { hour = hourNow(); paint(); } }, 30e3);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && following) { hour = hourNow(); paint(); } });
+
+  /* ---------- Sound: the game's street ambience and music, its pour, coin and train horn ---------- */
+  const Sound = (() => {
+    const FILES = { street: 'street_ambience.mp3', music: 'tab_loop.wav', pour: 'chai_pour.wav', coin: 'coin.wav', clink: 'kulhad_clink.wav', horn: 'train_horn.wav' };
+    let ctx, master, street, rail, railPan, bufs = {}, ready = false, nightLevel = 0;
+    function loop(buf, gain) { const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true; s.connect(gain); s.start(); }
+    // The train's clickety-clack, made rather than loaded: two pairs of wheel knocks per bar.
+    function clackBuffer() {
+      const len = Math.round(ctx.sampleRate * .9), b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0);
+      for (const at of [0, .11, .45, .56]) {
+        const i0 = Math.round(at * ctx.sampleRate);
+        for (let i = 0; i < ctx.sampleRate * .08 && i0 + i < len; i++) d[i0 + i] += (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * .012));
+      }
+      return b;
+    }
+    async function init() {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+      street = ctx.createGain(); street.connect(master);
+      const music = ctx.createGain(); music.gain.value = .22; music.connect(master);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700;
+      rail = ctx.createGain(); rail.gain.value = 0;
+      railPan = ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain();
+      lp.connect(rail); rail.connect(railPan); railPan.connect(master);
+      loop(clackBuffer(), lp);
+      night(nightLevel);
+      await Promise.all(Object.entries(FILES).map(async ([k, f]) => {
+        try { bufs[k] = await ctx.decodeAudioData(await (await fetch('/assets/audio/' + f)).arrayBuffer()); } catch (e) {}
+      }));
+      if (bufs.street) loop(bufs.street, street);
+      if (bufs.music) loop(bufs.music, music);
+      ready = true;
+    }
+    function on() {
+      if (!ctx) init(); else ctx.resume();
+      if (ctx) master.gain.setTargetAtTime(.9, ctx.currentTime, .2);
+    }
+    function off() { if (ctx) master.gain.setTargetAtTime(0, ctx.currentTime, .1); }
+    function play(name, vol = 1, pan = 0) {
+      if (!ready || !enabled || !bufs[name]) return;
+      const s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = bufs[name]; g.gain.value = vol;
+      if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); s.connect(g); g.connect(p); p.connect(master); }
+      else { s.connect(g); g.connect(master); }
+      s.start();
+    }
+    // Quieter streets late at night.
+    function night(n) { nightLevel = n; if (street) street.gain.setTargetAtTime(.5 * (1 - n * .55), ctx.currentTime, .5); }
+    function train(level, pan) {
+      if (!rail) return;
+      rail.gain.setTargetAtTime(level * .55, ctx.currentTime, .15);
+      if (railPan.pan) railPan.pan.setTargetAtTime(clamp(pan, -1, 1), ctx.currentTime, .15);
+    }
+    return { on, off, play, night, train };
+  })();
+
+  // Sound starts off; a saved "on" waits for the first tap or key, as browsers require.
+  const muteBtn = $('#mute');
+  let enabled = false;
+  function setSound(v, save) {
+    enabled = v;
+    muteBtn.setAttribute('aria-pressed', String(v));
+    muteBtn.setAttribute('aria-label', v ? 'Mute sound' : 'Turn sound on');
+    muteBtn.querySelector('.on').style.display = v ? '' : 'none';
+    muteBtn.querySelector('.off').style.display = v ? 'none' : '';
+    if (save) try { localStorage.setItem('kadak-sound', v ? 'on' : 'off'); } catch (e) {}
+    v ? Sound.on() : Sound.off();
+  }
+  muteBtn.addEventListener('click', () => setSound(!enabled, true));
+  setSound(false, false);
+  let saved = null; try { saved = localStorage.getItem('kadak-sound'); } catch (e) {}
+  if (saved === 'on') {
+    muteBtn.setAttribute('aria-pressed', 'true');
+    muteBtn.querySelector('.on').style.display = ''; muteBtn.querySelector('.off').style.display = 'none';
+    const unlock = e => { removeEventListener('pointerdown', unlock, true); removeEventListener('keydown', unlock, true); if (e.target.closest && e.target.closest('#mute')) return; setSound(true, false); };
+    addEventListener('pointerdown', unlock, true); addEventListener('keydown', unlock, true);
   }
 
-  /* ---------- Floating coin numbers, one per pour ---------- */
-  const pool = []; let pi = 0;
-  for (let i = 0; i < 12; i++) { const f = document.createElement('span'); f.className = 'floater'; f.setAttribute('aria-hidden', 'true'); document.body.appendChild(f); pool.push(f); }
+  /* ---------- Floating coin numbers, one per sale ---------- */
+  const floaters = []; let fi = 0;
+  for (let i = 0; i < 12; i++) { const f = document.createElement('span'); f.className = 'floater'; f.setAttribute('aria-hidden', 'true'); document.body.appendChild(f); floaters.push(f); }
   function float(px, py, v) {
-    const f = pool[pi++ % pool.length];
+    const f = floaters[fi++ % floaters.length];
     f.innerHTML = '+<svg class="coin" aria-hidden="true"><use href="#coin"/></svg>' + v;
     f.style.left = px + 'px'; f.style.top = (py - 20) + 'px';
     f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
   }
 
-  /* ---------- Customers: walk up, wait, get their chai, pay, walk off ---------- */
-  const SPOTS = [30, 58, 284], WAIT = 1400, SERVE = 800, FADE = 240, SPEED = 70;
-  const BODIES = ['#C8352B', '#5E9C3A', '#F4A300', '#8EC3BF', '#E8742A', '#F5D9C8'];
-  const HEADS = ['#B5562F', '#8A5A00', '#6E5843', '#B5521A'];
-  const PRICES = [10, 10, 12, 15, 15, 20]; // cutting, kadak, masala, elaichi...
-  const crowd = [], layer = $('#customers');
-  const pick = a => a[Math.floor(Math.random() * a.length)];
-  function arrive(now) {
-    const free = SPOTS.filter(s => !crowd.some(c => c.spot === s));
-    if (!free.length) return;
-    const spot = pick(free), h = 0.8 + Math.random() * 0.4;
-    const from = spot < CORE_C ? vb.x - 20 : vb.x + vb.w + 20;
-    const walk = reduce ? 0 : Math.abs(spot - from) / SPEED * 1000;
-    const bh = 42 * h, g = document.createElementNS(NS, 'g');
-    g.innerHTML = `<rect x="-9" y="${(166 - bh).toFixed(1)}" width="18" height="${bh.toFixed(1)}" rx="9" fill="${pick(BODIES)}"/><circle cx="0" cy="${(158 - bh).toFixed(1)}" r="8" fill="${pick(HEADS)}"/>`;
-    layer.appendChild(g);
-    crowd.push({ g, spot, from, walk, bh, born: now, served: false });
-    wake();
+  /* ---------- A sale: the kettle pours and puffs, Bablu beams and hops ---------- */
+  let lastSale = -1e9;
+  function sale(now, x) {
+    lastSale = now;
+    const pan = (x - (vb.x + vb.w / 2)) / (vb.w / 2) * .6;
+    Sound.play('pour', .7, pan * .3);
+    setTimeout(() => Sound.play('coin', .45, pan), 260);
+    if (Math.random() < .4) setTimeout(() => Sound.play('clink', .5, pan), 520);
   }
-  function step(now) {
+
+  /* ---------- Customers: walk up to a spot by the counter, wait, get their chai, pay, walk off ---------- */
+  const K = 3.1, SPOTS = [-45, -140, -235, 455, 530, 715], WAIT = 1600, SERVE = 800, FADE = 240, SPEED = .3;
+  const BODIES = [C.chilli, C.elaichi, C.marigold, C.tealLight, C.kesar, C.kulhadTint];
+  const HEADS = [C.kulhad, C.marigoldInk, C.chaiDark, C.kesarDeep];
+  const PRICES = [10, 10, 12, 15, 15, 20];
+  const crowd = [];
+  function arrive(now) {
+    const free = SPOTS.filter(s => s > vb.x + 10 && s < vb.x + vb.w - 10 && !crowd.some(c => c.spot === s));
+    if (!free.length) return;
+    const spot = pick(free), bh = 42 * K * (.82 + Math.random() * .36);
+    const from = spot < CORE_C ? vb.x - 80 : vb.x + vb.w + 80;
+    const walk = reduce ? 0 : Math.abs(spot - from) / SPEED;
+    const g = el('g', {}, crowdLayer);
+    const shadow = el('ellipse', { rx: 34, ry: 6, cy: FEET + 2, fill: C.ink, 'fill-opacity': .25, stroke: 'none' }, g);
+    el('rect', { x: -9 * K, y: FEET - bh, width: 18 * K, height: bh, rx: 9 * K, fill: pick(BODIES) }, g);
+    el('circle', { cy: FEET - bh - 8 * K, r: 8 * K, fill: pick(HEADS) }, g);
+    // Some carry a kulhad away with them.
+    const cup = el('g', { opacity: 0 }, g); kulhad(spot < CORE_C ? 30 : -30, FEET - bh * .45, .9, cup);
+    crowd.push({ g, shadow, cup, spot, from, walk, bh, born: now, served: false });
+  }
+  function stepCrowd(now) {
     for (let i = crowd.length - 1; i >= 0; i--) {
       const c = crowd[i], t = now - c.born, arrives = c.walk, leaves = arrives + WAIT, gone = leaves + c.walk;
       let x = c.spot, bob = 0, op = 1;
-      if (t < arrives) { const k = t / c.walk; x = c.from + (c.spot - c.from) * k; bob = Math.abs(Math.sin(t / 110)) * 2; }
-      else if (t > leaves) { const k = (t - leaves) / (c.walk || 1); x = c.spot + (c.from - c.spot) * k; bob = Math.abs(Math.sin(t / 110)) * 2; }
+      if (t < arrives) { x = lerp(c.from, c.spot, t / c.walk); bob = Math.abs(Math.sin(t / 110)) * 2 * K; }
+      else if (t > leaves) { x = lerp(c.spot, c.from, (t - leaves) / (c.walk || 1)); bob = Math.abs(Math.sin(t / 110)) * 2 * K; }
       if (reduce) op = Math.min(1, t / FADE, Math.max(0, (leaves + FADE - t) / FADE));
       if (!c.served && t >= arrives + SERVE) {
-        c.served = true;
-        const v = pick(PRICES), [px, py] = toScreen(c.spot, 158 - c.bh - 10);
-        float(px, py, v); steam();
+        c.served = true; c.cup.setAttribute('opacity', 1);
+        const [px, py] = toScreen(c.spot, FEET - c.bh - 16 * K - 10);
+        float(px, py, pick(PRICES)); sale(now, c.spot);
       }
       if (t >= (reduce ? leaves + FADE : gone)) { c.g.remove(); crowd.splice(i, 1); continue; }
-      c.g.setAttribute('transform', `translate(${x.toFixed(1)} ${(-bob).toFixed(1)})`);
-      c.g.setAttribute('opacity', op.toFixed(2));
+      set(c.g, { transform: `translate(${x.toFixed(1)} ${(-bob).toFixed(1)})`, opacity: op.toFixed(2) });
+      c.shadow.setAttribute('cy', FEET + 2 + bob);
     }
   }
-  let raf = 0;
-  function loop(now) { step(now); raf = crowd.length ? requestAnimationFrame(loop) : 0; }
-  function wake() { if (!raf) raf = requestAnimationFrame(loop); }
+  let nextGuest = performance.now() + 1200 + Math.random() * 1300;
 
-  let timer;
-  function schedule(first) {
-    const wait = first ? 1200 + Math.random() * 1300 : 2200 + Math.random() * 4300;
-    timer = setTimeout(() => { if (!document.hidden) arrive(performance.now()); schedule(false); }, wait);
+  /* ---------- The train: every half a minute or so, left to right, horn as the engine clears the tapri ---------- */
+  const TRAIN_SPEED = .22;
+  let trainX = null, nextTrain = performance.now() + (reduce ? Infinity : 3000 + Math.random() * 4000), honked = false;
+  function stepTrain(now, dt) {
+    if (trainX === null) {
+      if (now < nextTrain) return;
+      trainX = vb.x - TRAIN_LEN - 20; honked = false; tr.setAttribute('display', 'inline');
+    }
+    trainX += TRAIN_SPEED * dt;
+    const front = trainX + TRAIN_LEN, mid = trainX + TRAIN_LEN / 2;
+    if (!honked && front > 440) { honked = true; Sound.play('horn', .45, (440 - (vb.x + vb.w / 2)) / vb.w); }
+    const onScreen = clamp(Math.min(front - vb.x, vb.x + vb.w - trainX) / 300);
+    Sound.train(onScreen, (mid - (vb.x + vb.w / 2)) / (vb.w / 2) * .8);
+    if (trainX > vb.x + vb.w + 20) {
+      trainX = null; tr.setAttribute('display', 'none'); Sound.train(0, 0);
+      nextTrain = now + 22000 + Math.random() * 20000;
+      return;
+    }
+    tr.setAttribute('transform', `translate(${trainX.toFixed(1)} ${VY}) scale(.75)`);
   }
-  schedule(true);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) setSky(hourNow()); });
+
+  /* ---------- Birds by day ---------- */
+  let birds = null, nextBirds = performance.now() + 6000;
+  function stepBirds(now, dt) {
+    if (!birds) {
+      if (reduce || now < nextBirds || sky.night > .35) return;
+      const dir = Math.random() < .5 ? 1 : -1, n = 3 + Math.floor(Math.random() * 4), y = 230 + Math.random() * 120;
+      birds = { dir, x: dir > 0 ? vb.x - 80 : vb.x + vb.w + 80, list: Array.from({ length: n }, (_, i) => ({ e: el('path', {}, flock), dx: -dir * (i * 26 + Math.random() * 10), dy: (i % 2 ? 1 : -1) * Math.ceil(i / 2) * 14 + y, ph: Math.random() * 6 })) };
+    }
+    birds.x += birds.dir * .09 * dt;
+    for (const b of birds.list) {
+      const x = birds.x + b.dx, y = b.dy + Math.sin(now / 900 + b.ph) * 4, f = Math.sin(now / 120 + b.ph) * 7;
+      b.e.setAttribute('d', `M${(x - 11).toFixed(1)} ${(y - f).toFixed(1)}Q${(x - 5).toFixed(1)} ${(y - 6).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}Q${(x + 5).toFixed(1)} ${(y - 6).toFixed(1)} ${(x + 11).toFixed(1)} ${(y - f).toFixed(1)}`);
+    }
+    if ((birds.dir > 0 && birds.x > vb.x + vb.w + 300) || (birds.dir < 0 && birds.x < vb.x - 300)) {
+      flock.textContent = ''; birds = null; nextBirds = now + 15000 + Math.random() * 20000;
+    }
+  }
+
+  /* ---------- One frame ---------- */
+  let last = performance.now(), flicker = 0;
+  function frame(now) {
+    const dt = Math.min(100, now - last); last = now;
+    if (now > nextGuest) { if (!document.hidden) arrive(now); nextGuest = now + 2200 + Math.random() * 4300; }
+    stepCrowd(now); stepTrain(now, dt); stepBirds(now, dt);
+
+    const s = (now - lastSale) / 1000;
+    const tilt = s < .36 ? Math.sin(s / .36 * Math.PI) * 12 : 0;
+    kettle.setAttribute('transform', `rotate(${tilt.toFixed(2)} 150 612)`);
+    puff.forEach((c, i) => {
+      const q = (s - i * .08) / .9;
+      if (!(q >= 0 && q < 1)) return c.setAttribute('r', 0);
+      set(c, { cx: 176 + i * 6 + q * 12, cy: 556 - q * 60 - i * 8, r: (5 - i) * (1 - q * .5), opacity: 1 - q });
+    });
+    const beam = s < 1.1 ? clamp(Math.min(s / .12, (1.1 - s) / .18)) : 0;
+    const hop = s < .5 ? Math.sin(s / .5 * Math.PI) * 9 : 0, breath = reduce ? 0 : Math.sin(now / 1000 * Math.PI * 2 / 2.5) * 1.5;
+    face.beam.setAttribute('opacity', beam.toFixed(3)); face.warm.setAttribute('opacity', (1 - beam).toFixed(3));
+    bablu.setAttribute('transform', `translate(0 ${(-hop + breath).toFixed(2)}) rotate(${(hop * .3).toFixed(2)} 290 650)`);
+
+    // The dog's z drifts up; lit windows come and go at night.
+    const zq = (now / 2400) % 1;
+    set(zzz, { y: (-30 - zq * 26).toFixed(1), x: (52 + zq * 10).toFixed(1), opacity: (Math.sin(zq * Math.PI)).toFixed(2), 'font-size': (12 + zq * 8).toFixed(1) });
+    if (now - flicker > 900 && sky.night > .3) { flicker = now; const w = pick(lit); w.setAttribute('opacity', w.getAttribute('opacity') === '1' ? 0 : 1); }
+    requestAnimationFrame(frame);
+  }
 
   /* ---------- Tap to pour ---------- */
-  const kettle = $('#kettle');
-  function steam() { kettle.classList.remove('tilt'); void kettle.getBBox(); kettle.classList.add('tilt'); }
-  svg.addEventListener('pointerdown', e => { float(e.clientX, e.clientY, 1); steam(); });
+  svg.addEventListener('pointerdown', e => { float(e.clientX, e.clientY, 1); sale(performance.now(), vb.x + e.clientX / scale); });
 
   addEventListener('resize', fit);
   fit();
-  setInterval(() => setSky(hourNow()), 60e3);
+  document.fonts && document.fonts.ready.then(fit);
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
