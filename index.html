@@ -43,6 +43,10 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
 .cta { pointer-events: auto; display: inline-flex; align-items: center; gap: 10px; padding: 7px 20px 7px 16px; font-family: var(--f-display); font-weight: 800; font-size: 19px; line-height: 1.05; text-align: left; color: var(--ink); text-decoration: none; background: var(--marigold); border: 3px solid var(--ink); border-radius: 999px; box-shadow: 0 4px 0 var(--ink); transition: transform 120ms var(--ease-out), box-shadow 120ms var(--ease-out); }
 .cta svg { width: 24px; height: 24px; flex: none; }
 .cta small { display: block; font-family: var(--f-body); font-weight: 600; font-size: 11px; letter-spacing: .02em; }
+.cta { position: relative; box-shadow: 0 4px 0 var(--ink), 0 0 0 5px rgba(255,225,173,.28), 0 6px 26px rgba(11,35,40,.45); }
+.cta::after { content: ""; position: absolute; inset: -3px; border-radius: inherit; box-shadow: 0 0 0 0 rgba(255,225,173,.55); animation: ring 2.6s var(--ease-out) infinite; pointer-events: none; }
+.cta + .cta::after { animation-delay: 1.3s; }
+@keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(255,225,173,.55); } 70%, 100% { box-shadow: 0 0 0 14px rgba(255,225,173,0); } }
 .cta:hover { background: var(--haldi); }
 @media (max-width: 400px) {
   .stores { gap: 8px; }
@@ -85,13 +89,11 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
 @media (max-width: 400px) { .controls { gap: 7px; padding-right: 8px; } .clock { gap: 7px; } .clock output { min-width: 54px; font-size: 13px; } .live { padding: 3px 7px 2px; font-size: 11px; } }
 :focus-visible { outline: 3px solid var(--haldi); outline-offset: 3px; }
 
-.waft { animation: waft 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
-.waft.b { animation-delay: -1.6s; }
-@keyframes waft { 0%, 100% { transform: translate(0, 0) scaleY(1); opacity: 1; } 50% { transform: translate(3px, -6px) scaleY(1.08); opacity: .75; } }
 .tw { animation: twinkle 3s ease-in-out infinite; }
 @keyframes twinkle { 50% { opacity: .2; } }
 @media (prefers-reduced-motion: reduce) {
-  .waft, .tw { animation: none; }
+  .tw { animation: none; }
+  .cta::after { animation: none; }
   .floater.go { animation-duration: 600ms; }
 }
 </style>
@@ -181,10 +183,24 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   }
   const set = (e, a) => { for (const k in a) e.setAttribute(k, a[k]); };
   const ink = (w = 2) => ({ stroke: C.ink, 'stroke-width': w });
-  function steam(d, w, parent, cls = 'waft') {
-    const s = el('g', { class: cls }, parent);
-    el('path', { d, fill: 'none', stroke: C.ink, 'stroke-width': w + 3.5 }, s);
-    el('path', { d, fill: 'none', stroke: C.steam, 'stroke-width': w }, s);
+  // Steam: a few soft puffs per source, each rising, widening, swaying and thinning out on a loop.
+  const vapours = [];
+  function steam(x, y, parent, o = {}) {
+    const v = { x, y, n: 7, life: 2600, rise: 46, sway: 5, size: 4, alpha: .5, ...o, phase: Math.random() };
+    v.g = el('g', { filter: 'url(#vapour)', fill: C.paper }, parent);
+    v.p = Array.from({ length: v.n }, () => el('circle', { r: 0 }, v.g));
+    vapours.push(v);
+  }
+  function stepSteam(now, boost) {
+    for (const v of vapours) {
+      const b = v.boost ? boost : 0, life = v.life * (1 - b * .35);
+      v.p.forEach((c, i) => {
+        const a = (now / life + i / v.n + v.phase) % 1, k = i * 1.7 + v.phase * 6;
+        const x = v.x + Math.sin(a * 4 + k + now / 1400) * v.sway * a + a * a * v.sway * .8;
+        const fade = a < .18 ? a / .18 : (1 - (a - .18) / .82) ** 1.1;
+        set(c, { cx: x.toFixed(1), cy: (v.y - a * v.rise * (1 + b * .4)).toFixed(1), r: (v.size * (.5 + a * 1.8) * (1 + b * .3)).toFixed(2), opacity: (fade * v.alpha * (1 + b * 1.2)).toFixed(3) });
+      });
+    }
   }
   function sparkle(cx, cy, r, parent) {
     const k = r * .28;
@@ -217,6 +233,8 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   el('path', { d: 'M-52 -20Q-40 -48 -12 -56', fill: 'none', stroke: C.paper, 'stroke-width': 5 }, sun);
 
   const defs = el('defs', {});
+  const blur = el('filter', { id: 'vapour', x: '-100%', y: '-100%', width: '300%', height: '300%' }, defs);
+  el('feGaussianBlur', { stdDeviation: 2 }, blur);
   const mask = el('mask', { id: 'crescent', maskContentUnits: 'userSpaceOnUse' }, defs);
   el('circle', { r: 46, fill: '#fff' }, mask);
   el('circle', { cx: 22, cy: -14, r: 40, fill: '#000' }, mask);
@@ -297,8 +315,8 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   el('rect', { x: BX + 4, y: 801, width: BW - 8, height: 9, rx: 3, fill: C.marigoldDeep, ...ink(2) });
   for (const x of [BX + 18, BX + BW - 28]) el('rect', { x, y: 786, width: 8, height: 28, fill: C.chaiDark, ...ink(1.5) });
   el('rect', { x: BX, y: 812, width: BW, height: 14, rx: 3, fill: C.marigold, ...ink(2) });
-  steam(`M${BX + 62} 784C${BX + 54} 768 ${BX + 70} 760 ${BX + 64} 744`, 4, svg);
   for (const [x, s] of [[BX + 64, 1.1], [BX + 150, 1]]) kulhad(x, 812, s, svg);
+  steam(BX + 64, 780, svg, { n: 7, rise: 42, size: 5, alpha: .6 });
 
   /* ---------- The tapri, with Bablu Bhaiya's two faces stacked and the kettle on a pivot ---------- */
   const pool = el('ellipse', { cx: 220, cy: 846, rx: 300, ry: 30, fill: C.marigoldTint });
@@ -351,13 +369,12 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   const bulb = el('circle', { cx: 220, cy: 546, r: 7, ...ink(1.5) }, T);
   live.push([bulb, 'fill', s => mix(C.jute, C.marigoldTint, s.night)]);
 
-  steam('M124 590C110 570 136 560 126 540C118 524 134 514 130 502', 6, T);
-  steam('M140 592C150 578 140 568 150 556', 4, T, 'waft b');
-  const puff = [0, 1, 2].map(() => el('circle', { r: 0, fill: C.steam, ...ink(1.5) }, T));
 
   el('rect', { x: 92, y: 618, width: 90, height: 26, rx: 3, fill: C.slate, ...ink(2) }, T);
   el('path', { d: 'M108 618Q114 606 120 618Q126 604 134 618Q140 606 146 618Q152 604 160 618Q166 608 170 618', fill: C.kesar, ...ink(1.5) }, T);
   const kettle = el('image', { href: '/assets/art/kettle.svg', x: 92, y: 556, width: 90, height: 64 }, T);
+  steam(124, 576, T, { n: 12, rise: 62, size: 6, sway: 7, alpha: .8, boost: true });   // the lid
+  steam(176, 566, T, { n: 8, rise: 46, size: 4.2, sway: 6, alpha: .65, boost: true }); // the spout
 
   el('rect', { x: 52, y: 640, width: 336, height: 14, fill: C.marigoldDeep, ...ink(2) }, T);
   el('rect', { x: 60, y: 654, width: 320, height: 130, fill: C.kulhad, ...ink(2) }, T);
@@ -373,8 +390,8 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   el('rect', { x: 196, y: 610, width: 30, height: 30, rx: 6, fill: C.steam, 'fill-opacity': .85, ...ink(1.8) }, T);
   el('rect', { x: 199, y: 604, width: 24, height: 8, rx: 2, fill: C.kesar, ...ink(1.5) }, T);
   for (const [x, y] of [[204, 622], [216, 628], [208, 633]]) el('circle', { cx: x, cy: y, r: 4, fill: C.marigoldDeep, ...ink(1) }, T);
-  steam('M338 614C332 598 346 590 340 576', 4, T, 'waft b');
   for (const [x, s] of [[314, .95], [338, 1.1], [362, .95]]) kulhad(x, 641, s, T);
+  for (const [x, y] of [[314, 614], [338, 611], [362, 614]]) steam(x, y, T, { n: 6, rise: 38, size: 4, sway: 4, alpha: .6, life: 2300 + Math.random() * 600 });
 
   /* ---------- A street lamp, and a cycle with a milk can ---------- */
   const LX = 600;
@@ -452,13 +469,13 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
   live.push([bulbGlow, 'opacity', s => clamp(s.night * 1.5)]);
 
   /* ---------- Fit: keep the tapri and its nearest customers (x -80..520) in view, under the header ---------- */
-  const CORE_W = 600, CORE_C = 220, SIGN_TOP = 380;
+  const CORE_W = 680, CORE_C = 220, ROPE_TOP = 318;
   let vb = { x: 0, y: 0, w: 1000, h: 1000 }, scale = 1, headerBottom = 0;
   function fit() {
     const W = innerWidth, H = innerHeight;
     headerBottom = $('.top').getBoundingClientRect().bottom;
     const ground = Math.min(H * (H > W * 1.3 ? .76 : .8), $('.bottom').getBoundingClientRect().top - 6);
-    scale = clamp(Math.min(W / CORE_W, (ground - headerBottom - 8) / (KERB - SIGN_TOP)), .35, 2.4);
+    scale = clamp(Math.min(W / CORE_W, (ground - headerBottom - 14) / (KERB - ROPE_TOP), 1.6), .35, 2.4);
     vb.w = W / scale; vb.h = H / scale;
     vb.x = CORE_C - vb.w / 2;
     vb.y = KERB - ground / scale;
@@ -627,9 +644,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
     const shadow = el('ellipse', { rx: 34, ry: 6, cy: FEET + 2, fill: C.ink, 'fill-opacity': .25, stroke: 'none' }, g);
     el('rect', { x: -9 * K, y: FEET - bh, width: 18 * K, height: bh, rx: 9 * K, fill: pick(BODIES) }, g);
     el('circle', { cy: FEET - bh - 8 * K, r: 8 * K, fill: pick(HEADS) }, g);
-    // Some carry a kulhad away with them.
-    const cup = el('g', { opacity: 0 }, g); kulhad(spot < CORE_C ? 30 : -30, FEET - bh * .45, .9, cup);
-    crowd.push({ g, shadow, cup, spot, from, walk, bh, born: now, served: false });
+    crowd.push({ g, shadow, spot, from, walk, bh, born: now, served: false });
   }
   function stepCrowd(now) {
     for (let i = crowd.length - 1; i >= 0; i--) {
@@ -639,7 +654,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
       else if (t > leaves) { x = lerp(c.spot, c.from, (t - leaves) / (c.walk || 1)); bob = Math.abs(Math.sin(t / 110)) * 2 * K; }
       if (reduce) op = Math.min(1, t / FADE, Math.max(0, (leaves + FADE - t) / FADE));
       if (!c.served && t >= arrives + SERVE) {
-        c.served = true; c.cup.setAttribute('opacity', 1);
+        c.served = true;
         const [px, py] = toScreen(c.spot, FEET - c.bh - 16 * K - 10);
         float(px, py, pick(PRICES)); sale(now, c.spot);
       }
@@ -699,11 +714,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--f-body)
     const s = (now - lastSale) / 1000;
     const tilt = s < .36 ? Math.sin(s / .36 * Math.PI) * 12 : 0;
     kettle.setAttribute('transform', `rotate(${tilt.toFixed(2)} 150 612)`);
-    puff.forEach((c, i) => {
-      const q = (s - i * .08) / .9;
-      if (!(q >= 0 && q < 1)) return c.setAttribute('r', 0);
-      set(c, { cx: 176 + i * 6 + q * 12, cy: 556 - q * 60 - i * 8, r: (5 - i) * (1 - q * .5), opacity: 1 - q });
-    });
+    stepSteam(now, s < 2.5 ? Math.exp(-s / .8) : 0);
     const beam = s < 1.1 ? clamp(Math.min(s / .12, (1.1 - s) / .18)) : 0;
     const hop = s < .5 ? Math.sin(s / .5 * Math.PI) * 9 : 0, breath = reduce ? 0 : Math.sin(now / 1000 * Math.PI * 2 / 2.5) * 1.5;
     face.beam.setAttribute('opacity', beam.toFixed(3)); face.warm.setAttribute('opacity', (1 - beam).toFixed(3));
