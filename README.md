@@ -8,6 +8,9 @@ Landing site and store-required pages for **Kadak: Idle Chai Empire** (tappStudi
 | `/privacy-policy/` | `privacy-policy/index.html` | `noindex`, linked from the landing footer |
 | `/terms/` | `terms/index.html` | `noindex`, linked from the landing footer |
 | `/support/` | `support/index.html` | `noindex`, also the data-deletion page (`/support/#3-data-deletion`) |
+| `/season/`, `/open/` | `season/index.html`, `open/index.html` | Links into the game (App Store in-app event cards). With the app installed iOS and Android open it instead (`/season` opens the Festival season sheet); without it the page sends iPhone and Android to their store, anything else to `/`. `noindex` |
+| `/.well-known/apple-app-site-association` | same | iOS universal links: claims only `/season*` and `/open*` for `686K8WJMYW.in.tappstudio.kadakchai` |
+| `/.well-known/assetlinks.json` | same | Android App Links verification: the SHA-256 of the Play app signing key and the upload key (Play Console, App integrity) |
 
 The old `tappstudio.in/kadak/*.html` URLs redirect here.
 

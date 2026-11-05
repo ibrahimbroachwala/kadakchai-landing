@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kadak: Idle Chai Empire</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#12343B">
+<link rel="icon" href="/assets/favicon-48.png">
+<!-- A link into the game. With Kadak installed, iOS (universal link) and
+     Android (verified App Link) open the app instead of this page; without
+     it, send the player to their store, or to the landing page elsewhere. -->
+<script>
+  (function () {
+    var ua = navigator.userAgent || '';
+    var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    var to = ios ? 'https://apps.apple.com/app/id6821840374'
+      : /Android/.test(ua) ? 'https://play.google.com/store/apps/details?id=in.tappstudio.kadakchai'
+      : '/';
+    location.replace(to);
+  })();
+</script>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #12343B; color: #FFF8EC; font: 18px/1.5 system-ui, sans-serif; text-align: center; }
+  a { color: #F4A300; }
+</style>
+</head>
+<body>
+<p>Opening Kadak&hellip;<br><a href="/">Get Kadak: Idle Chai Empire</a></p>
+</body>
+</html>
